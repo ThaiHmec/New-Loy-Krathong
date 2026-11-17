@@ -45,8 +45,6 @@
       pointer-events: none;
       z-index: 0;
     }
-    #dropdown-list::-webkit-scrollbar { width: 6px; }
-    #dropdown-list::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 6px; }
   </style>
 </head>
 <body class="relative pb-16">
@@ -62,8 +60,8 @@
       <h1 class="text-2xl sm:text-4xl font-bold gold-gradient-text tracking-wide drop-shadow-lg">
         Noppamas & Pageant Voting
       </h1>
-      <p id="mode-subtitle" class="text-slate-300 mt-1 text-xs sm:text-sm px-2">
-        Cast your vote for your favorite contestant (1 vote per person).
+      <p class="text-slate-300 mt-1 text-xs sm:text-sm px-2">
+        Scan QR Code & Cast your vote (Limited to 1 vote per device).
       </p>
     </header>
 
@@ -82,42 +80,28 @@
         <div>
           <h3 class="text-xs font-semibold text-pink-400 mb-2">🌸 Female Contestants</h3>
           <div id="leaderboard-female" class="space-y-2">
-            <div class="text-center text-slate-400 text-xs py-2">Loading scores...</div>
+            <div class="text-center text-slate-400 text-xs py-2">No votes yet</div>
           </div>
         </div>
         <div>
           <h3 class="text-xs font-semibold text-blue-400 mb-2">✨ Male Contestants</h3>
           <div id="leaderboard-male" class="space-y-2">
-            <div class="text-center text-slate-400 text-xs py-2">Loading scores...</div>
+            <div class="text-center text-slate-400 text-xs py-2">No votes yet</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Voter Registration Section -->
-    <section id="voter-section" class="mb-6 bg-gradient-to-r from-indigo-950/90 to-slate-900/90 rounded-2xl p-4 sm:p-5 gold-border relative z-30">
-      <h2 class="text-sm sm:text-base font-semibold text-amber-300 mb-2">
-        📝 Voter Registration
-      </h2>
-      <div class="relative">
-        <input type="text" id="voter-input" autocomplete="off"
-          placeholder="Tap to search or select your name..." disabled
-          class="w-full px-4 py-3 rounded-xl bg-slate-800 border border-amber-500/50 text-white focus:outline-none focus:border-amber-400 text-sm sm:text-base shadow-inner">
-        
-        <div id="dropdown-list" class="hidden absolute left-0 right-0 mt-1 max-h-56 overflow-y-auto bg-slate-800 border border-amber-400/60 rounded-xl shadow-2xl z-50 divide-y divide-slate-700/70">
-        </div>
-      </div>
+    <!-- แจ้งเตือนเมื่อเครื่องนี้โหวตไปแล้ว -->
+    <div id="voted-banner" class="hidden mb-6 bg-emerald-950/80 border border-emerald-500/50 rounded-2xl p-4 text-center">
+      <p class="text-emerald-300 font-semibold text-sm">✅ You have already cast your vote from this device.</p>
+      <p class="text-slate-300 text-xs mt-1">Thank you for participating!</p>
+    </div>
 
-      <div id="selected-voter-badge" class="hidden mt-3 text-xs sm:text-sm text-emerald-400 bg-emerald-950/60 border border-emerald-500/40 px-3 py-2 rounded-lg flex items-center justify-between">
-        <span class="truncate">✅ Verified Voter: <strong id="display-voter-name" class="text-white"></strong></span>
-        <button onclick="clearSelectedVoter()" class="text-xs text-rose-400 hover:text-rose-300 underline ml-2 shrink-0">Change</button>
-      </div>
-    </section>
-
-    <!-- QR Code Generator Card -->
+    <!-- QR Code Card สำหรับแอดมิน -->
     <section class="mb-6 bg-slate-900/70 border border-slate-700 rounded-2xl p-4 text-center">
       <button onclick="toggleQRModal()" class="text-xs text-amber-300 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 px-4 py-2 rounded-xl transition font-medium">
-        📱 View QR Code for Direct Voting (No Registration Required)
+        📱 View Voting QR Code
       </button>
     </section>
 
@@ -145,8 +129,8 @@
   <!-- QR Code Modal -->
   <div id="qr-modal" onclick="toggleQRModal()" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 cursor-pointer">
     <div class="relative bg-slate-900 border border-amber-500/50 p-6 rounded-2xl max-w-sm w-full flex flex-col items-center text-center" onclick="event.stopPropagation()">
-      <h3 class="text-amber-300 font-bold text-base mb-2">QR Code for Direct Voting</h3>
-      <p class="text-slate-300 text-xs mb-4">Scan this QR code to vote instantly without entering voter registration.</p>
+      <h3 class="text-amber-300 font-bold text-base mb-2">Voting QR Code</h3>
+      <p class="text-slate-300 text-xs mb-4">Scan this QR code to vote (Limited to 1 vote per device).</p>
       <div id="qrcode" class="bg-white p-3 rounded-xl mb-4"></div>
       <button onclick="toggleQRModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold">Close</button>
     </div>
@@ -155,17 +139,24 @@
   <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3kYk9j4rV_gg87I3va6DgS8-QOVWJ4ayTRbwXHaXDDh_Hv0Z8scCkWJWspOfm1Vr0/exec';
 
-    let allVoters = [];
     let allContestants = [];
-    let selectedVoter = '';
-    let isQrMode = false;
+    let hasVotedOnThisDevice = false;
+
+    function getOrCreateDeviceId() {
+      let devId = localStorage.getItem('lk_pageant_device_id');
+      if (!devId) {
+        const screenInfo = `${window.screen.width}x${window.screen.height}`;
+        const randomStr = Math.random().toString(36).substring(2, 10).toUpperCase();
+        devId = `DEV-${screenInfo}-${Date.now()}-${randomStr}`;
+        localStorage.setItem('lk_pageant_device_id', devId);
+      }
+      return devId;
+    }
 
     window.onload = function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('mode') === 'qr') {
-        isQrMode = true;
-        document.getElementById('voter-section').style.display = 'none';
-        document.getElementById('mode-subtitle').textContent = 'QR Code Voting Mode: You can vote directly without registration.';
+      if (localStorage.getItem('lk_pageant_voted') === 'true') {
+        hasVotedOnThisDevice = true;
+        document.getElementById('voted-banner').classList.remove('hidden');
       }
 
       loadData();
@@ -176,17 +167,15 @@
     function generateQRCode() {
       const qrContainer = document.getElementById('qrcode');
       qrContainer.innerHTML = '';
-      const qrUrl = window.location.href.split('?')[0] + '?mode=qr';
       new QRCode(qrContainer, {
-        text: qrUrl,
+        text: window.location.href,
         width: 180,
         height: 180
       });
     }
 
     function toggleQRModal() {
-      const modal = document.getElementById('qr-modal');
-      modal.classList.toggle('hidden');
+      document.getElementById('qr-modal').classList.toggle('hidden');
     }
 
     async function loadData() {
@@ -194,15 +183,7 @@
         const response = await fetch(`${SCRIPT_URL}?action=getInitialData`);
         const data = await response.json();
         
-        allVoters = data.voters || [];
         allContestants = data.contestants || [];
-        
-        if (!isQrMode) {
-          const input = document.getElementById('voter-input');
-          input.disabled = false;
-          input.placeholder = `Tap to select your name (${allVoters.length} available)...`;
-        }
-        
         renderContestants(allContestants);
         renderLeaderboard(data.leaderboard || { female: [], male: [] });
       } catch (err) {
@@ -220,66 +201,6 @@
       }
     }
 
-    const voterInput = document.getElementById('voter-input');
-    const dropdownList = document.getElementById('dropdown-list');
-
-    if (voterInput) {
-      voterInput.addEventListener('focus', () => showDropdown(voterInput.value));
-      voterInput.addEventListener('input', (e) => {
-        selectedVoter = '';
-        updateSelectedBadge('');
-        showDropdown(e.target.value);
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!voterInput.contains(e.target) && !dropdownList.contains(e.target)) {
-          dropdownList.classList.add('hidden');
-        }
-      });
-    }
-
-    function showDropdown(keyword) {
-      const kw = keyword.toLowerCase().trim();
-      const filtered = allVoters.filter(name => name.toLowerCase().includes(kw));
-      
-      if (filtered.length === 0) {
-        dropdownList.innerHTML = `<div class="px-4 py-3 text-xs sm:text-sm text-slate-400 text-center">No voter found</div>`;
-      } else {
-        dropdownList.innerHTML = filtered.map(name => `
-          <div onclick="selectVoter('${name.replace(/'/g, "\\'")}')" 
-            class="px-4 py-3 text-xs sm:text-sm text-slate-100 hover:bg-amber-500 hover:text-slate-950 font-medium cursor-pointer transition">
-            ${name}
-          </div>
-        `).join('');
-      }
-      dropdownList.classList.remove('hidden');
-    }
-
-    function selectVoter(name) {
-      selectedVoter = name;
-      voterInput.value = name;
-      dropdownList.classList.add('hidden');
-      updateSelectedBadge(name);
-    }
-
-    function clearSelectedVoter() {
-      selectedVoter = '';
-      voterInput.value = '';
-      updateSelectedBadge('');
-      voterInput.focus();
-    }
-
-    function updateSelectedBadge(name) {
-      const badge = document.getElementById('selected-voter-badge');
-      const display = document.getElementById('display-voter-name');
-      if (name) {
-        display.textContent = name;
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-    }
-
     function renderContestants(contestants) {
       const grid = document.getElementById('contestants-grid');
       if (contestants.length === 0) {
@@ -287,7 +208,14 @@
         return;
       }
 
-      grid.innerHTML = contestants.map(c => `
+      grid.innerHTML = contestants.map(c => {
+        const isLocked = hasVotedOnThisDevice;
+        const btnClass = isLocked 
+          ? 'w-full py-2 px-3 rounded-xl bg-slate-700 text-slate-400 font-bold text-xs cursor-not-allowed'
+          : 'w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold text-xs shadow-md transition transform active:scale-95 cursor-pointer';
+        const btnText = isLocked ? '✓ Voted' : `🪷 Vote No. ${c.no}`;
+
+        return `
         <div class="card-contestant rounded-2xl overflow-hidden gold-border flex flex-col">
           <div class="relative aspect-square bg-slate-800 overflow-hidden cursor-pointer group" onclick="openImageModal('${c.image}', 'No. ${c.no} - ${c.name.replace(/'/g, "\\'")}')">
             <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300"
@@ -304,13 +232,12 @@
           </div>
           <div class="p-3 flex-1 flex flex-col justify-between text-center">
             <h3 class="font-semibold text-xs sm:text-sm text-amber-100 mb-2.5 truncate" title="${c.name}">${c.name}</h3>
-            <button onclick="confirmVote('${c.no}', '${c.name.replace(/'/g, "\\'")}', '${c.gender}')"
-              class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold text-xs shadow-md transition transform active:scale-95 cursor-pointer">
-              🪷 Vote No. ${c.no}
+            <button ${isLocked ? 'disabled' : ''} onclick="confirmVote('${c.no}', '${c.name.replace(/'/g, "\\'")}', '${c.gender}')" class="${btnClass}">
+              ${btnText}
             </button>
           </div>
         </div>
-      `).join('');
+      `}).join('');
     }
 
     function openImageModal(imgSrc, caption) {
@@ -346,30 +273,24 @@
     }
 
     function confirmVote(no, contestantName, contestantGender) {
-      let currentName = 'QR Code Voter';
-      if (!isQrMode) {
-        currentName = selectedVoter || voterInput.value.trim();
-        if (!currentName || !allVoters.includes(currentName)) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Please select your name',
-            text: 'Please select your name in the Voter Registration section before voting.',
-            confirmButtonColor: '#f59e0b',
-            background: '#1e293b',
-            color: '#fff'
-          });
-          voterInput.focus();
-          return;
-        }
+      if (hasVotedOnThisDevice) {
+        Swal.fire({
+          icon: 'info',
+          title: 'Already Voted',
+          text: 'You have already voted from this device.',
+          confirmButtonColor: '#f59e0b',
+          background: '#1e293b',
+          color: '#fff'
+        });
+        return;
       }
 
       Swal.fire({
         title: 'Confirm your vote?',
         html: `
           <div class="text-left bg-slate-800 p-3 rounded-xl border border-amber-500/30 text-xs sm:text-sm space-y-1.5 mt-2">
-            ${!isQrMode ? `<p class="text-slate-300">Voter: <strong class="text-amber-400">${currentName}</strong></p>` : '<p class="text-slate-300">Mode: <strong class="text-amber-400">QR Code Direct Vote</strong></p>'}
             <p class="text-slate-300">Contestant: <strong class="text-emerald-400">No. ${no} - ${contestantName}</strong></p>
-            <p class="text-[11px] text-rose-400 mt-2">* Once confirmed, this vote cannot be changed.</p>
+            <p class="text-[11px] text-rose-400 mt-2">* Once confirmed, this device cannot vote again.</p>
           </div>
         `,
         icon: 'question',
@@ -395,23 +316,19 @@
               method: 'POST',
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
               body: JSON.stringify({
-                voterName: currentName,
                 contestantNo: no,
                 contestantName: contestantName,
                 contestantGender: contestantGender,
-                isQrMode: isQrMode
+                deviceId: getOrCreateDeviceId()
               })
             });
             const res = await response.json();
 
             if (res.success) {
-              if (!isQrMode) {
-                allVoters = allVoters.filter(v => v !== currentName);
-                selectedVoter = '';
-                voterInput.value = '';
-                voterInput.placeholder = `Tap to select your name (${allVoters.length} available)...`;
-                updateSelectedBadge('');
-              }
+              localStorage.setItem('lk_pageant_voted', 'true');
+              hasVotedOnThisDevice = true;
+              document.getElementById('voted-banner').classList.remove('hidden');
+              renderContestants(allContestants);
               renderLeaderboard(res.leaderboard);
 
               Swal.fire({
@@ -423,6 +340,12 @@
                 color: '#fff'
               });
             } else {
+              if (res.message.includes('already voted')) {
+                localStorage.setItem('lk_pageant_voted', 'true');
+                hasVotedOnThisDevice = true;
+                document.getElementById('voted-banner').classList.remove('hidden');
+                renderContestants(allContestants);
+              }
               Swal.fire({
                 icon: 'error',
                 title: 'Voting Failed',
