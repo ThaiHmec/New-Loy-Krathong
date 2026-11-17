@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- QRCode Generator Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   
   <style>
@@ -56,7 +55,6 @@
 
   <div class="relative z-10 max-w-5xl mx-auto px-3 sm:px-4 pt-6">
     
-    <!-- Header -->
     <header class="text-center mb-6">
       <div class="inline-block px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs sm:text-sm mb-2">
         🌕 Loy Krathong Festival - Pageant Voting 🪷
@@ -69,7 +67,7 @@
       </p>
     </header>
 
-    <!-- Real-time Leaderboard (Top 5 Female & Male) -->
+    <!-- Leaderboard Top 5 Female & Male -->
     <section class="mb-6 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 gold-border">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm sm:text-base font-bold text-amber-400 flex items-center gap-1.5">
@@ -81,14 +79,12 @@
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Female Leaderboard -->
         <div>
           <h3 class="text-xs font-semibold text-pink-400 mb-2">🌸 Female Contestants</h3>
           <div id="leaderboard-female" class="space-y-2">
             <div class="text-center text-slate-400 text-xs py-2">Loading scores...</div>
           </div>
         </div>
-        <!-- Male Leaderboard -->
         <div>
           <h3 class="text-xs font-semibold text-blue-400 mb-2">✨ Male Contestants</h3>
           <div id="leaderboard-male" class="space-y-2">
@@ -98,7 +94,7 @@
       </div>
     </section>
 
-    <!-- Section 1: Voter Verification (Hidden if accessed via QR Code) -->
+    <!-- Voter Registration Section -->
     <section id="voter-section" class="mb-6 bg-gradient-to-r from-indigo-950/90 to-slate-900/90 rounded-2xl p-4 sm:p-5 gold-border relative z-30">
       <h2 class="text-sm sm:text-base font-semibold text-amber-300 mb-2">
         📝 Voter Registration
@@ -118,14 +114,14 @@
       </div>
     </section>
 
-    <!-- QR Code Generator Card for Admin -->
+    <!-- QR Code Generator Card -->
     <section class="mb-6 bg-slate-900/70 border border-slate-700 rounded-2xl p-4 text-center">
       <button onclick="toggleQRModal()" class="text-xs text-amber-300 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 px-4 py-2 rounded-xl transition font-medium">
         📱 View QR Code for Direct Voting (No Registration Required)
       </button>
     </section>
 
-    <!-- Section 2: Contestants Grid -->
+    <!-- Contestants Grid -->
     <section class="relative z-10">
       <h2 class="text-sm sm:text-base font-semibold text-amber-300 mb-3">
         🪷 Select Contestant to Vote
@@ -157,7 +153,6 @@
   </div>
 
   <script>
-    // 🔴 Replace with your Google Apps Script Web App URL 🔴
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3kYk9j4rV_gg87I3va6DgS8-QOVWJ4ayTRbwXHaXDDh_Hv0Z8scCkWJWspOfm1Vr0/exec';
 
     let allVoters = [];
@@ -166,7 +161,6 @@
     let isQrMode = false;
 
     window.onload = function() {
-      // Check if URL has ?mode=qr
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('mode') === 'qr') {
         isQrMode = true;
@@ -310,7 +304,7 @@
           </div>
           <div class="p-3 flex-1 flex flex-col justify-between text-center">
             <h3 class="font-semibold text-xs sm:text-sm text-amber-100 mb-2.5 truncate" title="${c.name}">${c.name}</h3>
-            <button onclick="confirmVote('${c.no}', '${c.name.replace(/'/g, "\\'")}')"
+            <button onclick="confirmVote('${c.no}', '${c.name.replace(/'/g, "\\'")}', '${c.gender}')"
               class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold text-xs shadow-md transition transform active:scale-95 cursor-pointer">
               🪷 Vote No. ${c.no}
             </button>
@@ -351,7 +345,7 @@
       maleContainer.innerHTML = renderList(data.male);
     }
 
-    function confirmVote(no, contestantName) {
+    function confirmVote(no, contestantName, contestantGender) {
       let currentName = 'QR Code Voter';
       if (!isQrMode) {
         currentName = selectedVoter || voterInput.value.trim();
@@ -404,6 +398,7 @@
                 voterName: currentName,
                 contestantNo: no,
                 contestantName: contestantName,
+                contestantGender: contestantGender,
                 isQrMode: isQrMode
               })
             });
@@ -424,7 +419,7 @@
                 title: 'Vote Successful!',
                 text: res.message,
                 confirmButtonColor: '#f59e0b',
-                background: '#0f172a',
+                background: '#1e293b',
                 color: '#fff'
               });
             } else {
@@ -433,7 +428,7 @@
                 title: 'Voting Failed',
                 text: res.message,
                 confirmButtonColor: '#ef4444',
-                background: '#0f172a',
+                background: '#1e293b',
                 color: '#fff'
               });
               loadData();
@@ -444,7 +439,7 @@
               title: 'Connection Error',
               text: 'Please try again.',
               confirmButtonColor: '#ef4444',
-              background: '#0f172a',
+              background: '#1e293b',
               color: '#fff'
             });
           }
