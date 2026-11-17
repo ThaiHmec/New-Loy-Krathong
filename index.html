@@ -47,7 +47,7 @@
     }
   </style>
 </head>
-<body class="relative pb-16">
+<body class="relative pb-12">
 
   <div class="moon"></div>
 
@@ -98,15 +98,8 @@
       <p class="text-slate-300 text-xs mt-1">Thank you for participating!</p>
     </div>
 
-    <!-- QR Code Card สำหรับแอดมิน -->
-    <section class="mb-6 bg-slate-900/70 border border-slate-700 rounded-2xl p-4 text-center">
-      <button onclick="toggleQRModal()" class="text-xs text-amber-300 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 px-4 py-2 rounded-xl transition font-medium">
-        📱 View Voting QR Code
-      </button>
-    </section>
-
     <!-- Contestants Grid -->
-    <section class="relative z-10">
+    <section class="relative z-10 mb-10">
       <h2 class="text-sm sm:text-base font-semibold text-amber-300 mb-3">
         🪷 Select Contestant to Vote
       </h2>
@@ -114,6 +107,13 @@
         <div class="col-span-full text-center py-10 text-slate-400 text-sm">Loading contestants...</div>
       </div>
     </section>
+
+    <!-- Footer: ปุ่ม QR Code ขนาดเล็กด้านล่างสุด -->
+    <footer class="text-center pt-4 border-t border-slate-800/80">
+      <button onclick="toggleQRModal()" class="text-[11px] text-slate-400 hover:text-amber-300 transition inline-flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-slate-800/60">
+        <span>📱</span> <span>QR Code</span>
+      </button>
+    </footer>
 
   </div>
 
