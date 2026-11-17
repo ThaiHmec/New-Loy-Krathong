@@ -1,23 +1,24 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ประกวดนางนพมาศ วันลอยกระทง</title>
-  <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Loy Krathong - Pageant Voting</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- QRCode Generator Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   
   <style>
     body {
-      font-family: 'Prompt', sans-serif;
+      font-family: 'Poppins', sans-serif;
       background: radial-gradient(circle at top, #1e1b4b 0%, #0f172a 55%, #020617 100%);
       color: #f8fafc;
       min-height: 100vh;
       overflow-x: hidden;
       -webkit-tap-highlight-color: transparent;
     }
-    .font-thai-title { font-family: 'Chonburi', serif; }
     .gold-gradient-text {
       background: linear-gradient(to right, #fde047, #f59e0b, #fef08a, #d97706);
       -webkit-background-clip: text;
@@ -53,44 +54,58 @@
 
   <div class="moon"></div>
 
-  <div class="relative z-10 max-w-4xl mx-auto px-3 sm:px-4 pt-6">
+  <div class="relative z-10 max-w-5xl mx-auto px-3 sm:px-4 pt-6">
     
-    <!-- ส่วนหัวเว็บ -->
+    <!-- Header -->
     <header class="text-center mb-6">
       <div class="inline-block px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs sm:text-sm mb-2">
-        🌕 สืบสานประเพณีไทย ร่วมใจลอยกระทง 🪷
+        🌕 Loy Krathong Festival - Pageant Voting 🪷
       </div>
-      <h1 class="font-thai-title text-2xl sm:text-4xl gold-gradient-text tracking-wide drop-shadow-lg">
-        การประกวดนางนพมาศ
+      <h1 class="text-2xl sm:text-4xl font-bold gold-gradient-text tracking-wide drop-shadow-lg">
+        Noppamas & Pageant Voting
       </h1>
-      <p class="text-slate-300 mt-1 text-xs sm:text-sm px-2">
-        เลือกชื่อกำลังพลและโหวตผู้เข้าประกวดที่คุณชื่นชอบ (1 ท่าน โหวตได้ 1 สิทธิ์เท่านั้น)
+      <p id="mode-subtitle" class="text-slate-300 mt-1 text-xs sm:text-sm px-2">
+        Cast your vote for your favorite contestant (1 vote per person).
       </p>
     </header>
 
-    <!-- ส่วนแสดงผลโหวตเรียลไทม์ Top 5 -->
+    <!-- Real-time Leaderboard (Top 5 Female & Male) -->
     <section class="mb-6 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 gold-border">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm sm:text-base font-bold text-amber-400 flex items-center gap-1.5">
-          👑 คะแนนสูงสุด (Top 5 Real-time)
+          👑 Live Leaderboard (Top 5)
         </h2>
         <span class="text-[10px] sm:text-xs text-emerald-400 flex items-center gap-1">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> อัปเดตอัตโนมัติ
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Real-time updates
         </span>
       </div>
-      <div id="leaderboard-container" class="grid grid-cols-2 sm:grid-cols-5 gap-2">
-        <div class="col-span-full text-center text-slate-400 py-3 text-xs">กำลังโหลดผลคะแนน...</div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Female Leaderboard -->
+        <div>
+          <h3 class="text-xs font-semibold text-pink-400 mb-2">🌸 Female Contestants</h3>
+          <div id="leaderboard-female" class="space-y-2">
+            <div class="text-center text-slate-400 text-xs py-2">Loading scores...</div>
+          </div>
+        </div>
+        <!-- Male Leaderboard -->
+        <div>
+          <h3 class="text-xs font-semibold text-blue-400 mb-2">✨ Male Contestants</h3>
+          <div id="leaderboard-male" class="space-y-2">
+            <div class="text-center text-slate-400 text-xs py-2">Loading scores...</div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ส่วนที่ 1: ช่องกรอกรายชื่อกำลังพล -->
-    <section class="mb-6 bg-gradient-to-r from-indigo-950/90 to-slate-900/90 rounded-2xl p-4 sm:p-5 gold-border relative z-30">
+    <!-- Section 1: Voter Verification (Hidden if accessed via QR Code) -->
+    <section id="voter-section" class="mb-6 bg-gradient-to-r from-indigo-950/90 to-slate-900/90 rounded-2xl p-4 sm:p-5 gold-border relative z-30">
       <h2 class="text-sm sm:text-base font-semibold text-amber-300 mb-2">
-        📝 รายชื่อกำลังพลเข้าร่วมโหวต
+        📝 Voter Registration
       </h2>
       <div class="relative">
         <input type="text" id="voter-input" autocomplete="off"
-          placeholder="แตะเพื่อพิมพ์หรือเลือกรายชื่อ..." disabled
+          placeholder="Tap to search or select your name..." disabled
           class="w-full px-4 py-3 rounded-xl bg-slate-800 border border-amber-500/50 text-white focus:outline-none focus:border-amber-400 text-sm sm:text-base shadow-inner">
         
         <div id="dropdown-list" class="hidden absolute left-0 right-0 mt-1 max-h-56 overflow-y-auto bg-slate-800 border border-amber-400/60 rounded-xl shadow-2xl z-50 divide-y divide-slate-700/70">
@@ -98,24 +113,31 @@
       </div>
 
       <div id="selected-voter-badge" class="hidden mt-3 text-xs sm:text-sm text-emerald-400 bg-emerald-950/60 border border-emerald-500/40 px-3 py-2 rounded-lg flex items-center justify-between">
-        <span class="truncate">✅ ผู้ใช้สิทธิ์: <strong id="display-voter-name" class="text-white"></strong></span>
-        <button onclick="clearSelectedVoter()" class="text-xs text-rose-400 hover:text-rose-300 underline ml-2 shrink-0">เปลี่ยน</button>
+        <span class="truncate">✅ Verified Voter: <strong id="display-voter-name" class="text-white"></strong></span>
+        <button onclick="clearSelectedVoter()" class="text-xs text-rose-400 hover:text-rose-300 underline ml-2 shrink-0">Change</button>
       </div>
     </section>
 
-    <!-- ส่วนที่ 2: แสดงรูปภาพผู้ประกวด -->
+    <!-- QR Code Generator Card for Admin -->
+    <section class="mb-6 bg-slate-900/70 border border-slate-700 rounded-2xl p-4 text-center">
+      <button onclick="toggleQRModal()" class="text-xs text-amber-300 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 px-4 py-2 rounded-xl transition font-medium">
+        📱 View QR Code for Direct Voting (No Registration Required)
+      </button>
+    </section>
+
+    <!-- Section 2: Contestants Grid -->
     <section class="relative z-10">
       <h2 class="text-sm sm:text-base font-semibold text-amber-300 mb-3">
-        🪷 เลือกผู้เข้าประกวดนางนพมาศที่ต้องการโหวต
+        🪷 Select Contestant to Vote
       </h2>
       <div id="contestants-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-        <div class="col-span-full text-center py-10 text-slate-400 text-sm">กำลังโหลดข้อมูลผู้เข้าประกวด...</div>
+        <div class="col-span-full text-center py-10 text-slate-400 text-sm">Loading contestants...</div>
       </div>
     </section>
 
   </div>
 
-  <!-- Modal สำหรับดูรูปภาพขนาดใหญ่ -->
+  <!-- Image Zoom Modal -->
   <div id="image-modal" onclick="closeImageModal()" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 cursor-pointer">
     <div class="relative max-w-lg w-full flex flex-col items-center" onclick="event.stopPropagation()">
       <button onclick="closeImageModal()" class="absolute -top-10 right-0 text-white text-2xl font-bold bg-slate-800/80 w-8 h-8 rounded-full flex items-center justify-center hover:bg-rose-600 transition">&times;</button>
@@ -124,20 +146,55 @@
     </div>
   </div>
 
+  <!-- QR Code Modal -->
+  <div id="qr-modal" onclick="toggleQRModal()" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 cursor-pointer">
+    <div class="relative bg-slate-900 border border-amber-500/50 p-6 rounded-2xl max-w-sm w-full flex flex-col items-center text-center" onclick="event.stopPropagation()">
+      <h3 class="text-amber-300 font-bold text-base mb-2">QR Code for Direct Voting</h3>
+      <p class="text-slate-300 text-xs mb-4">Scan this QR code to vote instantly without entering voter registration.</p>
+      <div id="qrcode" class="bg-white p-3 rounded-xl mb-4"></div>
+      <button onclick="toggleQRModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold">Close</button>
+    </div>
+  </div>
+
   <script>
-    // 🔴 นำ URL จาก Google Apps Script (ลงท้ายด้วย /exec) มาวางแทนที่ข้อความด้านล่างนี้ 🔴
+    // 🔴 Replace with your Google Apps Script Web App URL 🔴
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3kYk9j4rV_gg87I3va6DgS8-QOVWJ4ayTRbwXHaXDDh_Hv0Z8scCkWJWspOfm1Vr0/exec';
 
     let allVoters = [];
     let allContestants = [];
     let selectedVoter = '';
+    let isQrMode = false;
 
     window.onload = function() {
+      // Check if URL has ?mode=qr
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('mode') === 'qr') {
+        isQrMode = true;
+        document.getElementById('voter-section').style.display = 'none';
+        document.getElementById('mode-subtitle').textContent = 'QR Code Voting Mode: You can vote directly without registration.';
+      }
+
       loadData();
       setInterval(refreshLeaderboard, 10000);
+      generateQRCode();
     };
 
-    // ดึงข้อมูลเริ่มต้นผ่าน Fetch API
+    function generateQRCode() {
+      const qrContainer = document.getElementById('qrcode');
+      qrContainer.innerHTML = '';
+      const qrUrl = window.location.href.split('?')[0] + '?mode=qr';
+      new QRCode(qrContainer, {
+        text: qrUrl,
+        width: 180,
+        height: 180
+      });
+    }
+
+    function toggleQRModal() {
+      const modal = document.getElementById('qr-modal');
+      modal.classList.toggle('hidden');
+    }
+
     async function loadData() {
       try {
         const response = await fetch(`${SCRIPT_URL}?action=getInitialData`);
@@ -146,24 +203,24 @@
         allVoters = data.voters || [];
         allContestants = data.contestants || [];
         
-        const input = document.getElementById('voter-input');
-        input.disabled = false;
-        input.placeholder = `แตะเพื่อเลือกรายชื่อ (${allVoters.length} ท่าน)...`;
+        if (!isQrMode) {
+          const input = document.getElementById('voter-input');
+          input.disabled = false;
+          input.placeholder = `Tap to select your name (${allVoters.length} available)...`;
+        }
         
         renderContestants(allContestants);
-        renderLeaderboard(data.leaderboard || []);
+        renderLeaderboard(data.leaderboard || { female: [], male: [] });
       } catch (err) {
-        document.getElementById('voter-input').placeholder = 'ไม่สามารถเชื่อมต่อฐานข้อมูล กรุณาตรวจสอบ SCRIPT_URL';
         console.error(err);
       }
     }
 
-    // อัปเดตผลคะแนน Top 5
     async function refreshLeaderboard() {
       try {
         const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard`);
         const data = await response.json();
-        renderLeaderboard(data.leaderboard || []);
+        renderLeaderboard(data.leaderboard || { female: [], male: [] });
       } catch (err) {
         console.error(err);
       }
@@ -172,25 +229,27 @@
     const voterInput = document.getElementById('voter-input');
     const dropdownList = document.getElementById('dropdown-list');
 
-    voterInput.addEventListener('focus', () => showDropdown(voterInput.value));
-    voterInput.addEventListener('input', (e) => {
-      selectedVoter = '';
-      updateSelectedBadge('');
-      showDropdown(e.target.value);
-    });
+    if (voterInput) {
+      voterInput.addEventListener('focus', () => showDropdown(voterInput.value));
+      voterInput.addEventListener('input', (e) => {
+        selectedVoter = '';
+        updateSelectedBadge('');
+        showDropdown(e.target.value);
+      });
 
-    document.addEventListener('click', (e) => {
-      if (!voterInput.contains(e.target) && !dropdownList.contains(e.target)) {
-        dropdownList.classList.add('hidden');
-      }
-    });
+      document.addEventListener('click', (e) => {
+        if (!voterInput.contains(e.target) && !dropdownList.contains(e.target)) {
+          dropdownList.classList.add('hidden');
+        }
+      });
+    }
 
     function showDropdown(keyword) {
       const kw = keyword.toLowerCase().trim();
       const filtered = allVoters.filter(name => name.toLowerCase().includes(kw));
       
       if (filtered.length === 0) {
-        dropdownList.innerHTML = `<div class="px-4 py-3 text-xs sm:text-sm text-slate-400 text-center">ไม่พบรายชื่อกำลังพล</div>`;
+        dropdownList.innerHTML = `<div class="px-4 py-3 text-xs sm:text-sm text-slate-400 text-center">No voter found</div>`;
       } else {
         dropdownList.innerHTML = filtered.map(name => `
           <div onclick="selectVoter('${name.replace(/'/g, "\\'")}')" 
@@ -230,27 +289,30 @@
     function renderContestants(contestants) {
       const grid = document.getElementById('contestants-grid');
       if (contestants.length === 0) {
-        grid.innerHTML = '<div class="col-span-full text-center text-slate-400 text-sm">ยังไม่มีข้อมูลผู้เข้าประกวด</div>';
+        grid.innerHTML = '<div class="col-span-full text-center text-slate-400 text-sm">No contestants available</div>';
         return;
       }
 
       grid.innerHTML = contestants.map(c => `
         <div class="card-contestant rounded-2xl overflow-hidden gold-border flex flex-col">
-          <div class="relative aspect-square bg-slate-800 overflow-hidden cursor-pointer group" onclick="openImageModal('${c.image}', 'หมายเลข ${c.no} - ${c.name.replace(/'/g, "\\'")}')">
+          <div class="relative aspect-square bg-slate-800 overflow-hidden cursor-pointer group" onclick="openImageModal('${c.image}', 'No. ${c.no} - ${c.name.replace(/'/g, "\\'")}')">
             <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300"
               onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140047.png'">
             <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-              <span class="bg-slate-900/80 text-amber-300 text-[10px] px-2 py-1 rounded-full backdrop-blur-sm border border-amber-400/30">🔍 แตะเพื่อดูรูปใหญ่</span>
+              <span class="bg-slate-900/80 text-amber-300 text-[10px] px-2 py-1 rounded-full backdrop-blur-sm border border-amber-400/30">🔍 Tap to Zoom</span>
             </div>
             <div class="absolute top-2 left-2 bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 font-bold px-2 py-0.5 rounded-full text-xs shadow-md">
-              เบอร์ ${c.no}
+              No. ${c.no}
+            </div>
+            <div class="absolute top-2 right-2 bg-slate-900/70 text-slate-200 px-2 py-0.5 rounded-full text-[10px]">
+              ${c.gender}
             </div>
           </div>
           <div class="p-3 flex-1 flex flex-col justify-between text-center">
             <h3 class="font-semibold text-xs sm:text-sm text-amber-100 mb-2.5 truncate" title="${c.name}">${c.name}</h3>
             <button onclick="confirmVote('${c.no}', '${c.name.replace(/'/g, "\\'")}')"
               class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold text-xs shadow-md transition transform active:scale-95 cursor-pointer">
-              🪷 โหวตเบอร์ ${c.no}
+              🪷 Vote No. ${c.no}
             </button>
           </div>
         </div>
@@ -267,60 +329,67 @@
       document.getElementById('image-modal').classList.add('hidden');
     }
 
-    function renderLeaderboard(list) {
-      const container = document.getElementById('leaderboard-container');
-      if (list.length === 0) {
-        container.innerHTML = '<div class="col-span-full text-center text-slate-400 text-xs">ยังไม่มีคะแนนโหวต</div>';
-        return;
-      }
+    function renderLeaderboard(data) {
+      const femaleContainer = document.getElementById('leaderboard-female');
+      const maleContainer = document.getElementById('leaderboard-male');
 
-      const medals = ['🥇', '🥈', '🥉', '🏅', '🏅'];
-      container.innerHTML = list.map((item, idx) => `
-        <div class="bg-slate-800/90 border ${idx === 0 ? 'border-amber-400 bg-amber-950/30' : 'border-slate-700'} rounded-xl p-2.5 flex flex-col justify-between text-center">
-          <div class="text-[10px] font-bold text-amber-300 mb-0.5">${medals[idx]} อันดับ ${idx + 1}</div>
-          <div class="font-medium text-xs text-white truncate px-1" title="${item.name}">${item.name}</div>
-          <div class="mt-1 font-bold text-amber-400 text-sm">${item.score.toLocaleString()} <span class="text-[10px] font-normal text-slate-400">คะแนน</span></div>
-        </div>
-      `).join('');
+      const renderList = (list) => {
+        if (!list || list.length === 0) return '<div class="text-slate-400 text-xs text-center py-2">No votes yet</div>';
+        const medals = ['🥇', '🥈', '🥉', '🏅', '🏅'];
+        return list.map((item, idx) => `
+          <div class="bg-slate-800/90 border ${idx === 0 ? 'border-amber-400 bg-amber-950/30' : 'border-slate-700'} rounded-xl p-2 flex items-center justify-between">
+            <div class="flex items-center gap-2 truncate">
+              <span class="text-xs font-bold">${medals[idx]}</span>
+              <span class="text-xs text-slate-200 truncate" title="${item.name}">${item.name} (No. ${item.no})</span>
+            </div>
+            <span class="font-bold text-amber-400 text-xs shrink-0">${item.score.toLocaleString()} pts</span>
+          </div>
+        `).join('');
+      };
+
+      femaleContainer.innerHTML = renderList(data.female);
+      maleContainer.innerHTML = renderList(data.male);
     }
 
     function confirmVote(no, contestantName) {
-      const currentName = selectedVoter || voterInput.value.trim();
-      
-      if (!currentName || !allVoters.includes(currentName)) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'กรุณาเลือกรายชื่อกำลังพลก่อน',
-          text: 'โปรดแตะเลือกชื่อ-สกุลของท่านในช่อง "รายชื่อกำลังพลเข้าร่วมโหวต" ด้านบนก่อนกดโหวต',
-          confirmButtonColor: '#f59e0b',
-          background: '#1e293b',
-          color: '#fff'
-        });
-        voterInput.focus();
-        return;
+      let currentName = 'QR Code Voter';
+      if (!isQrMode) {
+        currentName = selectedVoter || voterInput.value.trim();
+        if (!currentName || !allVoters.includes(currentName)) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Please select your name',
+            text: 'Please select your name in the Voter Registration section before voting.',
+            confirmButtonColor: '#f59e0b',
+            background: '#1e293b',
+            color: '#fff'
+          });
+          voterInput.focus();
+          return;
+        }
       }
 
       Swal.fire({
-        title: 'ยืนยันการลงคะแนนโหวต?',
+        title: 'Confirm your vote?',
         html: `
           <div class="text-left bg-slate-800 p-3 rounded-xl border border-amber-500/30 text-xs sm:text-sm space-y-1.5 mt-2">
-            <p class="text-slate-300">ผู้โหวต: <strong class="text-amber-400">${currentName}</strong></p>
-            <p class="text-slate-300">โหวตให้: <strong class="text-emerald-400">หมายเลข ${no} - ${contestantName}</strong></p>
-            <p class="text-[11px] text-rose-400 mt-2">* เมื่อกดตกลงแล้ว จะไม่สามารถแก้ไขหรือโหวตซ้ำได้อีก</p>
+            ${!isQrMode ? `<p class="text-slate-300">Voter: <strong class="text-amber-400">${currentName}</strong></p>` : '<p class="text-slate-300">Mode: <strong class="text-amber-400">QR Code Direct Vote</strong></p>'}
+            <p class="text-slate-300">Contestant: <strong class="text-emerald-400">No. ${no} - ${contestantName}</strong></p>
+            <p class="text-[11px] text-rose-400 mt-2">* Once confirmed, this vote cannot be changed.</p>
           </div>
         `,
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#10b981',
         cancelButtonColor: '#64748b',
-        confirmButtonText: 'ตกลง ยืนยันการโหวต',
-        cancelButtonText: 'ยกเลิก',
+        confirmButtonText: 'Confirm Vote',
+        cancelButtonText: 'Cancel',
         background: '#0f172a',
         color: '#fff'
       }).then(async (result) => {
         if (result.isConfirmed) {
           Swal.fire({
-            title: 'กำลังบันทึกคะแนน...',
+            title: 'Submitting vote...',
             allowOutsideClick: false,
             background: '#0f172a',
             color: '#fff',
@@ -328,29 +397,31 @@
           });
 
           try {
-            // ส่งข้อมูลแบบ POST โดยใช้ text/plain เพื่อเลี่ยง CORS Preflight ของ Google Apps Script
             const response = await fetch(SCRIPT_URL, {
               method: 'POST',
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
               body: JSON.stringify({
                 voterName: currentName,
                 contestantNo: no,
-                contestantName: contestantName
+                contestantName: contestantName,
+                isQrMode: isQrMode
               })
             });
             const res = await response.json();
 
             if (res.success) {
-              allVoters = allVoters.filter(v => v !== currentName);
-              selectedVoter = '';
-              voterInput.value = '';
-              voterInput.placeholder = `แตะเพื่อเลือกรายชื่อ (${allVoters.length} ท่าน)...`;
-              updateSelectedBadge('');
+              if (!isQrMode) {
+                allVoters = allVoters.filter(v => v !== currentName);
+                selectedVoter = '';
+                voterInput.value = '';
+                voterInput.placeholder = `Tap to select your name (${allVoters.length} available)...`;
+                updateSelectedBadge('');
+              }
               renderLeaderboard(res.leaderboard);
 
               Swal.fire({
                 icon: 'success',
-                title: 'โหวตสำเร็จ!',
+                title: 'Vote Successful!',
                 text: res.message,
                 confirmButtonColor: '#f59e0b',
                 background: '#0f172a',
@@ -359,7 +430,7 @@
             } else {
               Swal.fire({
                 icon: 'error',
-                title: 'ไม่สามารถโหวตได้',
+                title: 'Voting Failed',
                 text: res.message,
                 confirmButtonColor: '#ef4444',
                 background: '#0f172a',
@@ -370,8 +441,8 @@
           } catch (err) {
             Swal.fire({
               icon: 'error',
-              title: 'เกิดข้อผิดพลาดในการเชื่อมต่อ',
-              text: 'กรุณาลองกดยืนยันใหม่อีกครั้ง',
+              title: 'Connection Error',
+              text: 'Please try again.',
               confirmButtonColor: '#ef4444',
               background: '#0f172a',
               color: '#fff'
