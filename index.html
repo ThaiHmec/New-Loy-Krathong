@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Loy Krathong - Pageant Voting</title>
+  <title>Loy Krathong - Pageant & Krathong Voting</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   
   <style>
     body {
@@ -36,14 +35,25 @@
       position: fixed;
       top: 20px;
       right: 20px;
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       background: radial-gradient(circle, #fef9c3 20%, #fde047 60%, rgba(253, 224, 71, 0) 75%);
       border-radius: 50%;
       box-shadow: 0 0 40px #fde047;
       opacity: 0.7;
       pointer-events: none;
       z-index: 0;
+    }
+    .tab-active {
+      background: linear-gradient(to right, #f59e0b, #d97706);
+      color: #0f172a;
+      font-weight: 700;
+      border-color: #fbbf24;
+    }
+    .tab-inactive {
+      background: rgba(30, 41, 59, 0.8);
+      color: #cbd5e1;
+      border-color: rgba(148, 163, 184, 0.3);
     }
   </style>
 </head>
@@ -53,67 +63,109 @@
 
   <div class="relative z-10 max-w-5xl mx-auto px-3 sm:px-4 pt-6">
     
+    <!-- Header -->
     <header class="text-center mb-6">
       <div class="inline-block px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs sm:text-sm mb-2">
-        🌕 Loy Krathong Festival - Pageant Voting 🪷
+        🌕 Loy Krathong Festival 2026 🪷
       </div>
       <h1 class="text-2xl sm:text-4xl font-bold gold-gradient-text tracking-wide drop-shadow-lg">
-        Noppamas & Pageant Voting
+        Loy Krathong Contest Voting
       </h1>
       <p class="text-slate-300 mt-1 text-xs sm:text-sm px-2">
-        Scan QR Code & Cast your vote (Limited to 1 vote per device).
+        You can cast 1 vote for each of the 3 contest categories.
       </p>
     </header>
 
-    <!-- Leaderboard Top 5 Female & Male -->
+    <!-- Hidden Admin Panel (Visible ONLY when URL has ?admin=true) -->
+    <section id="admin-panel" class="hidden mb-6 bg-slate-900/95 border-2 border-rose-500/60 rounded-2xl p-4 sm:p-5 shadow-2xl">
+      <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-700">
+        <h2 class="text-sm sm:text-base font-bold text-rose-400">🛠️ Admin Management Panel</h2>
+        <span class="text-xs text-slate-400">Manage Contestants & Photos</span>
+      </div>
+      
+      <form onsubmit="handleAddContestant(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
+        <select id="admin-category" class="px-3 py-2 rounded-xl bg-slate-800 border border-slate-600 text-xs sm:text-sm text-white">
+          <option value="Noppamas">1. Noppamas (Female)</option>
+          <option value="Fancy Costume">2. Fancy Costume (Male)</option>
+          <option value="Krathong contest">3. Krathong contest</option>
+        </select>
+        <input type="number" id="admin-no" placeholder="No. (e.g. 1)" required
+          class="px-3 py-2 rounded-xl bg-slate-800 border border-slate-600 text-xs sm:text-sm text-white">
+        <input type="text" id="admin-name" placeholder="Contestant / Team Name" required
+          class="px-3 py-2 rounded-xl bg-slate-800 border border-slate-600 text-xs sm:text-sm text-white">
+        <input type="url" id="admin-image" placeholder="Image URL (Google Drive / Direct Link)" required
+          class="px-3 py-2 rounded-xl bg-slate-800 border border-slate-600 text-xs sm:text-sm text-white">
+        <button type="submit" class="sm:col-span-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs sm:text-sm transition">
+          ➕ Add Contestant to Sheet
+        </button>
+      </form>
+    </section>
+
+    <!-- Live Leaderboard (Top 3 for all 3 categories) -->
     <section class="mb-6 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 gold-border">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm sm:text-base font-bold text-amber-400 flex items-center gap-1.5">
-          👑 Live Leaderboard (Top 5)
+          👑 Live Leaderboard (Top 3)
         </h2>
         <span class="text-[10px] sm:text-xs text-emerald-400 flex items-center gap-1">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Real-time updates
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Real-time
         </span>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <h3 class="text-xs font-semibold text-pink-400 mb-2">🌸 Female Contestants</h3>
-          <div id="leaderboard-female" class="space-y-2">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <!-- 1. Noppamas -->
+        <div class="bg-slate-800/50 rounded-xl p-3 border border-pink-500/20">
+          <h3 class="text-xs font-semibold text-pink-400 mb-2">👸 Noppamas</h3>
+          <div id="lb-Noppamas" class="space-y-1.5">
             <div class="text-center text-slate-400 text-xs py-2">No votes yet</div>
           </div>
         </div>
-        <div>
-          <h3 class="text-xs font-semibold text-blue-400 mb-2">✨ Male Contestants</h3>
-          <div id="leaderboard-male" class="space-y-2">
+        <!-- 2. Fancy Costume -->
+        <div class="bg-slate-800/50 rounded-xl p-3 border border-blue-500/20">
+          <h3 class="text-xs font-semibold text-blue-400 mb-2">🎭 Fancy Costume</h3>
+          <div id="lb-FancyCostume" class="space-y-1.5">
+            <div class="text-center text-slate-400 text-xs py-2">No votes yet</div>
+          </div>
+        </div>
+        <!-- 3. Krathong contest -->
+        <div class="bg-slate-800/50 rounded-xl p-3 border border-amber-500/20">
+          <h3 class="text-xs font-semibold text-amber-300 mb-2">🪷 Krathong Contest</h3>
+          <div id="lb-Krathongcontest" class="space-y-1.5">
             <div class="text-center text-slate-400 text-xs py-2">No votes yet</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- แจ้งเตือนเมื่อเครื่องนี้โหวตไปแล้ว -->
-    <div id="voted-banner" class="hidden mb-6 bg-emerald-950/80 border border-emerald-500/50 rounded-2xl p-4 text-center">
-      <p class="text-emerald-300 font-semibold text-sm">✅ You have already cast your vote from this device.</p>
-      <p class="text-slate-300 text-xs mt-1">Thank you for participating!</p>
+    <!-- Category Selector Tabs -->
+    <section class="mb-4">
+      <h2 class="text-sm sm:text-base font-semibold text-amber-300 mb-2.5">
+        🪷 Select Contestant to Vote
+      </h2>
+      <div class="grid grid-cols-3 gap-2">
+        <button id="tab-Noppamas" onclick="switchCategory('Noppamas')" class="tab-active py-2.5 px-2 rounded-xl border text-xs sm:text-sm transition text-center truncate">
+          👸 Noppamas
+        </button>
+        <button id="tab-Fancy Costume" onclick="switchCategory('Fancy Costume')" class="tab-inactive py-2.5 px-2 rounded-xl border text-xs sm:text-sm transition text-center truncate">
+          🎭 Fancy Costume
+        </button>
+        <button id="tab-Krathong contest" onclick="switchCategory('Krathong contest')" class="tab-inactive py-2.5 px-2 rounded-xl border text-xs sm:text-sm transition text-center truncate">
+          🪷 Krathong
+        </button>
+      </div>
+    </section>
+
+    <!-- Status Banner for Selected Category -->
+    <div id="category-voted-banner" class="hidden mb-4 bg-emerald-950/80 border border-emerald-500/50 rounded-xl p-3 text-center">
+      <p class="text-emerald-300 font-semibold text-xs sm:text-sm">✅ You have already voted in this category.</p>
     </div>
 
     <!-- Contestants Grid -->
-    <section class="relative z-10 mb-10">
-      <h2 class="text-sm sm:text-base font-semibold text-amber-300 mb-3">
-        🪷 Select Contestant to Vote
-      </h2>
+    <section class="relative z-10">
       <div id="contestants-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
         <div class="col-span-full text-center py-10 text-slate-400 text-sm">Loading contestants...</div>
       </div>
     </section>
-
-    <!-- Footer: ปุ่ม QR Code ขนาดเล็กด้านล่างสุด -->
-    <footer class="text-center pt-4 border-t border-slate-800/80">
-      <button onclick="toggleQRModal()" class="text-[11px] text-slate-400 hover:text-amber-300 transition inline-flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-slate-800/60">
-        <span>📱</span> <span>QR Code</span>
-      </button>
-    </footer>
 
   </div>
 
@@ -126,21 +178,20 @@
     </div>
   </div>
 
-  <!-- QR Code Modal -->
-  <div id="qr-modal" onclick="toggleQRModal()" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 cursor-pointer">
-    <div class="relative bg-slate-900 border border-amber-500/50 p-6 rounded-2xl max-w-sm w-full flex flex-col items-center text-center" onclick="event.stopPropagation()">
-      <h3 class="text-amber-300 font-bold text-base mb-2">Voting QR Code</h3>
-      <p class="text-slate-300 text-xs mb-4">Scan this QR code to vote (Limited to 1 vote per device).</p>
-      <div id="qrcode" class="bg-white p-3 rounded-xl mb-4"></div>
-      <button onclick="toggleQRModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold">Close</button>
-    </div>
-  </div>
-
   <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3kYk9j4rV_gg87I3va6DgS8-QOVWJ4ayTRbwXHaXDDh_Hv0Z8scCkWJWspOfm1Vr0/exec';
+    const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
-    let allContestants = [];
-    let hasVotedOnThisDevice = false;
+    let allContestants = {
+      'Noppamas': [],
+      'Fancy Costume': [],
+      'Krathong contest': []
+    };
+    let currentCategory = 'Noppamas';
+    let isAdminMode = false;
+    let adminPin = '';
+
+    // เก็บประวัติการโหวตแยก 3 ประเภทในเครื่อง
+    let votedCategories = JSON.parse(localStorage.getItem('lk_voted_categories_2026') || '{}');
 
     function getOrCreateDeviceId() {
       let devId = localStorage.getItem('lk_pageant_device_id');
@@ -153,39 +204,36 @@
       return devId;
     }
 
-    window.onload = function() {
-      if (localStorage.getItem('lk_pageant_voted') === 'true') {
-        hasVotedOnThisDevice = true;
-        document.getElementById('voted-banner').classList.remove('hidden');
+    window.onload = async function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('admin') === 'true') {
+        const { value: pin } = await Swal.fire({
+          title: 'Admin Login',
+          input: 'password',
+          inputLabel: 'Enter Admin PIN',
+          inputPlaceholder: 'Enter PIN...',
+          background: '#0f172a',
+          color: '#fff',
+          confirmButtonColor: '#f59e0b'
+        });
+        if (pin) {
+          isAdminMode = true;
+          adminPin = pin;
+          document.getElementById('admin-panel').classList.remove('hidden');
+        }
       }
 
       loadData();
       setInterval(refreshLeaderboard, 10000);
-      generateQRCode();
     };
-
-    function generateQRCode() {
-      const qrContainer = document.getElementById('qrcode');
-      qrContainer.innerHTML = '';
-      new QRCode(qrContainer, {
-        text: window.location.href,
-        width: 180,
-        height: 180
-      });
-    }
-
-    function toggleQRModal() {
-      document.getElementById('qr-modal').classList.toggle('hidden');
-    }
 
     async function loadData() {
       try {
         const response = await fetch(`${SCRIPT_URL}?action=getInitialData`);
         const data = await response.json();
-        
-        allContestants = data.contestants || [];
-        renderContestants(allContestants);
-        renderLeaderboard(data.leaderboard || { female: [], male: [] });
+        allContestants = data.contestants || allContestants;
+        renderContestants();
+        renderLeaderboard(data.leaderboard || {});
       } catch (err) {
         console.error(err);
       }
@@ -195,25 +243,54 @@
       try {
         const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard`);
         const data = await response.json();
-        renderLeaderboard(data.leaderboard || { female: [], male: [] });
+        renderLeaderboard(data.leaderboard || {});
       } catch (err) {
         console.error(err);
       }
     }
 
-    function renderContestants(contestants) {
+    function switchCategory(category) {
+      currentCategory = category;
+      
+      // อัปเดตสีปุ่มแท็บ
+      ['Noppamas', 'Fancy Costume', 'Krathong contest'].forEach(cat => {
+        const btn = document.getElementById(`tab-${cat}`);
+        if (cat === category) {
+          btn.className = 'tab-active py-2.5 px-2 rounded-xl border text-xs sm:text-sm transition text-center truncate';
+        } else {
+          btn.className = 'tab-inactive py-2.5 px-2 rounded-xl border text-xs sm:text-sm transition text-center truncate';
+        }
+      });
+
+      renderContestants();
+    }
+
+    function renderContestants() {
       const grid = document.getElementById('contestants-grid');
-      if (contestants.length === 0) {
-        grid.innerHTML = '<div class="col-span-full text-center text-slate-400 text-sm">No contestants available</div>';
+      const list = allContestants[currentCategory] || [];
+      const isLocked = !!votedCategories[currentCategory];
+
+      const banner = document.getElementById('category-voted-banner');
+      if (isLocked) {
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+
+      if (list.length === 0) {
+        grid.innerHTML = '<div class="col-span-full text-center text-slate-400 text-sm py-8">No contestants in this category yet.</div>';
         return;
       }
 
-      grid.innerHTML = contestants.map(c => {
-        const isLocked = hasVotedOnThisDevice;
+      grid.innerHTML = list.map(c => {
         const btnClass = isLocked 
           ? 'w-full py-2 px-3 rounded-xl bg-slate-700 text-slate-400 font-bold text-xs cursor-not-allowed'
           : 'w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold text-xs shadow-md transition transform active:scale-95 cursor-pointer';
         const btnText = isLocked ? '✓ Voted' : `🪷 Vote No. ${c.no}`;
+
+        const deleteBtn = isAdminMode 
+          ? `<button onclick="handleDeleteContestant('${c.no}', '${c.name.replace(/'/g, "\\'")}')" class="mt-2 w-full py-1.5 px-2 rounded-lg bg-rose-600/80 hover:bg-rose-600 text-white text-[11px] font-semibold">🗑️ Delete</button>`
+          : '';
 
         return `
         <div class="card-contestant rounded-2xl overflow-hidden gold-border flex flex-col">
@@ -226,15 +303,15 @@
             <div class="absolute top-2 left-2 bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 font-bold px-2 py-0.5 rounded-full text-xs shadow-md">
               No. ${c.no}
             </div>
-            <div class="absolute top-2 right-2 bg-slate-900/70 text-slate-200 px-2 py-0.5 rounded-full text-[10px]">
-              ${c.gender}
-            </div>
           </div>
           <div class="p-3 flex-1 flex flex-col justify-between text-center">
             <h3 class="font-semibold text-xs sm:text-sm text-amber-100 mb-2.5 truncate" title="${c.name}">${c.name}</h3>
-            <button ${isLocked ? 'disabled' : ''} onclick="confirmVote('${c.no}', '${c.name.replace(/'/g, "\\'")}', '${c.gender}')" class="${btnClass}">
-              ${btnText}
-            </button>
+            <div>
+              <button ${isLocked ? 'disabled' : ''} onclick="confirmVote('${c.no}', '${c.name.replace(/'/g, "\\'")}')" class="${btnClass}">
+                ${btnText}
+              </button>
+              ${deleteBtn}
+            </div>
           </div>
         </div>
       `}).join('');
@@ -251,33 +328,36 @@
     }
 
     function renderLeaderboard(data) {
-      const femaleContainer = document.getElementById('leaderboard-female');
-      const maleContainer = document.getElementById('leaderboard-male');
-
-      const renderList = (list) => {
-        if (!list || list.length === 0) return '<div class="text-slate-400 text-xs text-center py-2">No votes yet</div>';
-        const medals = ['🥇', '🥈', '🥉', '🏅', '🏅'];
-        return list.map((item, idx) => `
-          <div class="bg-slate-800/90 border ${idx === 0 ? 'border-amber-400 bg-amber-950/30' : 'border-slate-700'} rounded-xl p-2 flex items-center justify-between">
-            <div class="flex items-center gap-2 truncate">
-              <span class="text-xs font-bold">${medals[idx]}</span>
-              <span class="text-xs text-slate-200 truncate" title="${item.name}">${item.name} (No. ${item.no})</span>
+      const renderList = (list, elementId) => {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        if (!list || list.length === 0) {
+          el.innerHTML = '<div class="text-slate-400 text-[11px] text-center py-2">No votes yet</div>';
+          return;
+        }
+        const medals = ['🥇', '🥈', '🥉'];
+        el.innerHTML = list.map((item, idx) => `
+          <div class="bg-slate-900/90 border ${idx === 0 ? 'border-amber-400' : 'border-slate-700'} rounded-lg p-2 flex items-center justify-between">
+            <div class="flex items-center gap-1.5 truncate">
+              <span class="text-xs">${medals[idx]}</span>
+              <span class="text-[11px] text-slate-200 truncate" title="${item.name}">${item.name} (#${item.no})</span>
             </div>
-            <span class="font-bold text-amber-400 text-xs shrink-0">${item.score.toLocaleString()} pts</span>
+            <span class="font-bold text-amber-400 text-[11px] shrink-0">${item.score.toLocaleString()}</span>
           </div>
         `).join('');
       };
 
-      femaleContainer.innerHTML = renderList(data.female);
-      maleContainer.innerHTML = renderList(data.male);
+      renderList(data['Noppamas'], 'lb-Noppamas');
+      renderList(data['Fancy Costume'], 'lb-FancyCostume');
+      renderList(data['Krathong contest'], 'lb-Krathongcontest');
     }
 
-    function confirmVote(no, contestantName, contestantGender) {
-      if (hasVotedOnThisDevice) {
+    function confirmVote(no, contestantName) {
+      if (votedCategories[currentCategory]) {
         Swal.fire({
           icon: 'info',
           title: 'Already Voted',
-          text: 'You have already voted from this device.',
+          text: `You have already voted in ${currentCategory}.`,
           confirmButtonColor: '#f59e0b',
           background: '#1e293b',
           color: '#fff'
@@ -289,8 +369,9 @@
         title: 'Confirm your vote?',
         html: `
           <div class="text-left bg-slate-800 p-3 rounded-xl border border-amber-500/30 text-xs sm:text-sm space-y-1.5 mt-2">
+            <p class="text-slate-300">Category: <strong class="text-amber-400">${currentCategory}</strong></p>
             <p class="text-slate-300">Contestant: <strong class="text-emerald-400">No. ${no} - ${contestantName}</strong></p>
-            <p class="text-[11px] text-rose-400 mt-2">* Once confirmed, this device cannot vote again.</p>
+            <p class="text-[11px] text-rose-400 mt-2">* Limited to 1 vote per category on this device.</p>
           </div>
         `,
         icon: 'question',
@@ -316,19 +397,18 @@
               method: 'POST',
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
               body: JSON.stringify({
+                category: currentCategory,
                 contestantNo: no,
                 contestantName: contestantName,
-                contestantGender: contestantGender,
                 deviceId: getOrCreateDeviceId()
               })
             });
             const res = await response.json();
 
             if (res.success) {
-              localStorage.setItem('lk_pageant_voted', 'true');
-              hasVotedOnThisDevice = true;
-              document.getElementById('voted-banner').classList.remove('hidden');
-              renderContestants(allContestants);
+              votedCategories[currentCategory] = true;
+              localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
+              renderContestants();
               renderLeaderboard(res.leaderboard);
 
               Swal.fire({
@@ -341,10 +421,9 @@
               });
             } else {
               if (res.message.includes('already voted')) {
-                localStorage.setItem('lk_pageant_voted', 'true');
-                hasVotedOnThisDevice = true;
-                document.getElementById('voted-banner').classList.remove('hidden');
-                renderContestants(allContestants);
+                votedCategories[currentCategory] = true;
+                localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
+                renderContestants();
               }
               Swal.fire({
                 icon: 'error',
@@ -354,7 +433,6 @@
                 background: '#1e293b',
                 color: '#fff'
               });
-              loadData();
             }
           } catch (err) {
             Swal.fire({
@@ -368,6 +446,72 @@
           }
         }
       });
+    }
+
+    // Admin Functions
+    async function handleAddContestant(e) {
+      e.preventDefault();
+      const category = document.getElementById('admin-category').value;
+      const no = document.getElementById('admin-no').value;
+      const name = document.getElementById('admin-name').value;
+      const image = document.getElementById('admin-image').value;
+
+      Swal.fire({ title: 'Adding...', allowOutsideClick: false, background: '#0f172a', color: '#fff', didOpen: () => Swal.showLoading() });
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'addContestant', pin: adminPin, category, no, name, image })
+        });
+        const res = await response.json();
+        if (res.success) {
+          allContestants = res.data.contestants;
+          renderContestants();
+          document.getElementById('admin-no').value = '';
+          document.getElementById('admin-name').value = '';
+          document.getElementById('admin-image').value = '';
+          Swal.fire({ icon: 'success', title: 'Added!', text: res.message, background: '#1e293b', color: '#fff' });
+        } else {
+          Swal.fire({ icon: 'error', title: 'Failed', text: res.message, background: '#1e293b', color: '#fff' });
+        }
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Error', text: err.message, background: '#1e293b', color: '#fff' });
+      }
+    }
+
+    async function handleDeleteContestant(no, name) {
+      const confirm = await Swal.fire({
+        title: `Delete ${name}?`,
+        text: `Remove from ${currentCategory} sheet?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        confirmButtonText: 'Yes, delete',
+        background: '#0f172a',
+        color: '#fff'
+      });
+
+      if (confirm.isConfirmed) {
+        Swal.fire({ title: 'Deleting...', allowOutsideClick: false, background: '#0f172a', color: '#fff', didOpen: () => Swal.showLoading() });
+        try {
+          const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'deleteContestant', pin: adminPin, category: currentCategory, no, name })
+          });
+          const res = await response.json();
+          if (res.success) {
+            allContestants = res.data.contestants;
+            renderContestants();
+            Swal.fire({ icon: 'success', title: 'Deleted!', text: res.message, background: '#1e293b', color: '#fff' });
+          } else {
+            Swal.fire({ icon: 'error', title: 'Failed', text: res.message, background: '#1e293b', color: '#fff' });
+          }
+        } catch (err) {
+          Swal.fire({ icon: 'error', title: 'Error', text: err.message, background: '#1e293b', color: '#fff' });
+        }
+      }
     }
   </script>
 </body>
