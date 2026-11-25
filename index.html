@@ -88,7 +88,6 @@
 </head>
 <body class="relative pb-12">
 
-  <!-- Animated Fireworks Canvas & Loy Krathong Ambience -->
   <canvas id="fireworks-canvas" class="hidden"></canvas>
   <div class="moon"></div>
   <div class="lantern" style="left: 8%; animation-delay: 0s;">🏮</div>
@@ -96,9 +95,7 @@
   <div class="lantern" style="left: 72%; animation-delay: 2s;">🏮</div>
   <div class="lantern" style="left: 88%; animation-delay: 8s;">✨</div>
 
-  <!-- ========================================================= -->
-  <!-- VIEW 1: DEDICATED PREMIUM LIVE LEADERBOARD (?view=leaderboard) -->
-  <!-- ========================================================= -->
+  <!-- DEDICATED PREMIUM LIVE LEADERBOARD (?view=leaderboard) -->
   <div id="leaderboard-only-view" class="hidden relative z-10 max-w-6xl mx-auto px-4 pt-6">
     <header class="text-center mb-6">
       <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs sm:text-sm mb-2">
@@ -112,7 +109,6 @@
     </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-      <!-- 1. Noppamas -->
       <div class="premium-card rounded-3xl p-4 flex flex-col">
         <div class="text-center pb-3 mb-3 border-b border-pink-500/30">
           <span class="text-xs uppercase tracking-widest text-pink-400 font-semibold">Category 01</span>
@@ -121,7 +117,6 @@
         <div id="full-lb-Noppamas" class="space-y-3 flex-1"></div>
       </div>
 
-      <!-- 2. Fancy Costume -->
       <div class="premium-card rounded-3xl p-4 flex flex-col">
         <div class="text-center pb-3 mb-3 border-b border-blue-500/30">
           <span class="text-xs uppercase tracking-widest text-blue-400 font-semibold">Category 02</span>
@@ -130,7 +125,6 @@
         <div id="full-lb-FancyCostume" class="space-y-3 flex-1"></div>
       </div>
 
-      <!-- 3. Krathong contest -->
       <div class="premium-card rounded-3xl p-4 flex flex-col">
         <div class="text-center pb-3 mb-3 border-b border-amber-500/30">
           <span class="text-xs uppercase tracking-widest text-amber-400 font-semibold">Category 03</span>
@@ -147,9 +141,7 @@
     </div>
   </div>
 
-  <!-- ========================================================= -->
-  <!-- VIEW 2: MAIN VOTING & ADMIN PAGE                          -->
-  <!-- ========================================================= -->
+  <!-- MAIN VOTING & ADMIN PAGE -->
   <div id="main-voting-view" class="relative z-10 max-w-5xl mx-auto px-3 sm:px-4 pt-6">
     
     <header class="text-center mb-6">
@@ -164,7 +156,7 @@
       </p>
     </header>
 
-    <!-- Hidden Admin Panel with Image File Upload (?admin=true) -->
+    <!-- Hidden Admin Panel (?admin=true) -->
     <section id="admin-panel" class="hidden mb-6 bg-slate-900/95 border-2 border-rose-500/60 rounded-2xl p-4 sm:p-5 shadow-2xl">
       <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-700">
         <h2 class="text-sm sm:text-base font-bold text-rose-400">🛠️ Admin Management Panel</h2>
@@ -182,7 +174,6 @@
         <input type="text" id="admin-name" placeholder="Contestant / Team Name" required
           class="px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-600 text-xs sm:text-sm text-white">
         
-        <!-- ปุ่มเลือกไฟล์รูปภาพโดยตรง (ไม่ใช้ URL) -->
         <div class="sm:col-span-3 flex flex-col sm:flex-row items-center gap-3 bg-slate-800/80 p-3 rounded-xl border border-dashed border-amber-400/50">
           <label class="cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition shrink-0">
             📷 Choose Photo File
@@ -198,7 +189,7 @@
       </form>
     </section>
 
-    <!-- Compact Live Leaderboard on Main Page -->
+    <!-- Compact Live Leaderboard -->
     <section class="mb-6 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 gold-border">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm sm:text-base font-bold text-amber-400 flex items-center gap-1.5">
@@ -243,19 +234,16 @@
       </div>
     </section>
 
-    <!-- Status Banner -->
     <div id="category-voted-banner" class="hidden mb-4 bg-emerald-950/80 border border-emerald-500/50 rounded-xl p-3 text-center">
       <p class="text-emerald-300 font-semibold text-xs sm:text-sm">✅ You have already voted in this category.</p>
     </div>
 
-    <!-- Contestants Grid -->
     <section class="relative z-10 mb-10">
       <div id="contestants-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
         <div class="col-span-full text-center py-10 text-slate-400 text-sm">Loading contestants...</div>
       </div>
     </section>
 
-    <!-- Small Footer Link to Dedicated Live Scoreboard -->
     <footer class="text-center pt-4 border-t border-slate-800/80">
       <a href="?view=leaderboard" class="text-[11px] text-slate-400 hover:text-amber-300 transition inline-flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-slate-800/60">
         <span>🎆</span> <span>Live Scoreboard Screen</span>
@@ -275,6 +263,7 @@
 
   <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3kYk9j4rV_gg87I3va6DgS8-QOVWJ4ayTRbwXHaXDDh_Hv0Z8scCkWJWspOfm1Vr0/exec';
+    const IMGBB_API_KEY = '0a74be3d5fcae1d6990d964a97fece0e';
 
     let allContestants = { 'Noppamas': [], 'Fancy Costume': [], 'Krathong contest': [] };
     let currentCategory = 'Noppamas';
@@ -282,8 +271,6 @@
     let isLeaderboardOnly = false;
     let adminPin = '';
     let uploadedBase64 = '';
-    let uploadedMimeType = '';
-    let uploadedFileName = '';
 
     let votedCategories = JSON.parse(localStorage.getItem('lk_voted_categories_2026') || '{}');
 
@@ -423,7 +410,6 @@
     }
 
     function renderLeaderboard(data) {
-      // Compact Leaderboard on Main Page
       const renderCompact = (list, elementId) => {
         const el = document.getElementById(elementId);
         if (!el) return;
@@ -447,7 +433,6 @@
       renderCompact(data['Fancy Costume'], 'lb-FancyCostume');
       renderCompact(data['Krathong contest'], 'lb-Krathongcontest');
 
-      // Full Premium Leaderboard with Photos (?view=leaderboard)
       const renderFull = (list, elementId) => {
         const el = document.getElementById(elementId);
         if (!el) return;
@@ -487,14 +472,7 @@
 
     function confirmVote(no, contestantName) {
       if (votedCategories[currentCategory]) {
-        Swal.fire({
-          icon: 'info',
-          title: 'Already Voted',
-          text: `You have already voted in ${currentCategory}.`,
-          confirmButtonColor: '#f59e0b',
-          background: '#1e293b',
-          color: '#fff'
-        });
+        Swal.fire({ icon: 'info', title: 'Already Voted', text: `You have already voted in ${currentCategory}.`, confirmButtonColor: '#f59e0b', background: '#1e293b', color: '#fff' });
         return;
       }
 
@@ -538,28 +516,14 @@
               renderContestants();
               renderLeaderboard(res.leaderboard);
 
-              Swal.fire({
-                icon: 'success',
-                title: 'Vote Successful!',
-                text: res.message,
-                confirmButtonColor: '#f59e0b',
-                background: '#1e293b',
-                color: '#fff'
-              });
+              Swal.fire({ icon: 'success', title: 'Vote Successful!', text: res.message, confirmButtonColor: '#f59e0b', background: '#1e293b', color: '#fff' });
             } else {
               if (res.message.includes('already voted')) {
                 votedCategories[currentCategory] = true;
                 localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
                 renderContestants();
               }
-              Swal.fire({
-                icon: 'error',
-                title: 'Voting Failed',
-                text: res.message,
-                confirmButtonColor: '#ef4444',
-                background: '#1e293b',
-                color: '#fff'
-              });
+              Swal.fire({ icon: 'error', title: 'Voting Failed', text: res.message, confirmButtonColor: '#ef4444', background: '#1e293b', color: '#fff' });
             }
           } catch (err) {
             Swal.fire({ icon: 'error', title: 'Connection Error', text: 'Please try again.', confirmButtonColor: '#ef4444', background: '#1e293b', color: '#fff' });
@@ -568,12 +532,10 @@
       });
     }
 
-    // แปลงและย่อขนาดไฟล์รูปภาพที่แอดมินเลือกเป็น Base64 เพื่อส่งไปเก็บที่ Google Drive
     function previewAdminImage(event) {
       const file = event.target.files[0];
       if (!file) return;
 
-      uploadedFileName = file.name;
       document.getElementById('admin-file-label').textContent = file.name;
 
       const reader = new FileReader();
@@ -603,7 +565,6 @@
           document.getElementById('admin-img-preview').classList.remove('hidden');
 
           uploadedBase64 = dataUrl.split(',')[1];
-          uploadedMimeType = 'image/jpeg';
         };
         img.src = e.target.result;
       };
@@ -624,6 +585,24 @@
       Swal.fire({ title: 'Uploading photo...', allowOutsideClick: false, background: '#0f172a', color: '#fff', didOpen: () => Swal.showLoading() });
 
       try {
+        // 1. อัปโหลดไฟล์รูปภาพตรงเข้า imgbb เพื่อรับลิงก์รูปภาพ
+        const formData = new FormData();
+        formData.append('key', IMGBB_API_KEY);
+        formData.append('image', uploadedBase64);
+
+        const imgbbRes = await fetch('https://api.imgbb.com/1/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const imgbbJson = await imgbbRes.json();
+
+        if (!imgbbJson.success) {
+          throw new Error(imgbbJson.error?.message || 'Image upload failed');
+        }
+
+        const imageUrl = imgbbJson.data.display_url;
+
+        // 2. ส่งข้อมูลและลิงก์รูปภาพไปบันทึกในชีทผ่าน Apps Script
         const response = await fetch(SCRIPT_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -633,12 +612,11 @@
             category,
             no,
             name,
-            imageBase64: uploadedBase64,
-            imageMimeType: uploadedMimeType,
-            imageName: uploadedFileName
+            imageUrl
           })
         });
         const res = await response.json();
+
         if (res.success) {
           allContestants = res.data.contestants;
           renderContestants();
@@ -695,7 +673,6 @@
       }
     }
 
-    // เอฟเฟกต์พลุระเบิดบนหน้าจอแสดงผลคะแนน
     function startFireworks() {
       const canvas = document.getElementById('fireworks-canvas');
       const ctx = canvas.getContext('2d');
