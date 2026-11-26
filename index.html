@@ -52,8 +52,8 @@
 
     .royal-panel {
       background: linear-gradient(160deg, rgba(15, 23, 42, 0.84) 0%, rgba(6, 12, 28, 0.95) 100%);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(251, 191, 36, 0.38);
       box-shadow:
         0 10px 40px -10px rgba(0, 0, 0, 0.85),
@@ -62,16 +62,14 @@
 
     .card-contestant {
       background: linear-gradient(180deg, rgba(23, 37, 69, 0.85) 0%, rgba(9, 15, 32, 0.96) 100%);
-      backdrop-filter: blur(12px);
       border: 1px solid rgba(251, 191, 36, 0.32);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.65);
-      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 0.25s ease, border-color 0.25s ease;
     }
 
     .card-contestant:hover {
-      transform: translateY(-6px);
+      transform: translateY(-4px);
       border-color: rgba(253, 224, 71, 0.85);
-      box-shadow: 0 15px 35px rgba(245, 158, 11, 0.25);
     }
 
     .btn-royal-gold {
@@ -80,25 +78,8 @@
       background: linear-gradient(135deg, #fde047 0%, #f59e0b 50%, #d97706 100%);
       color: #090d16;
       font-weight: 700;
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-      transition: all 0.25s ease;
-    }
-
-    .btn-royal-gold::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -60%;
-      width: 40%;
-      height: 200%;
-      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.65) 50%, rgba(255,255,255,0) 100%);
-      transform: rotate(25deg);
-      animation: btnShimmer 3.5s infinite;
-    }
-
-    @keyframes btnShimmer {
-      0% { left: -60%; }
-      35%, 100% { left: 130%; }
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+      transition: transform 0.15s ease, opacity 0.15s ease;
     }
 
     .hero-bg-wrapper {
@@ -262,18 +243,17 @@
     .lantern {
       position: fixed;
       font-size: 22px;
-      opacity: 0.55;
-      animation: floatUp 18s infinite linear;
+      opacity: 0.45;
+      animation: floatUp 20s infinite linear;
       pointer-events: none;
       z-index: 3;
-      filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.8));
     }
 
     @keyframes floatUp {
-      0% { transform: translateY(105vh) rotate(-6deg) scale(0.85); opacity: 0; }
-      15% { opacity: 0.75; }
-      85% { opacity: 0.75; }
-      100% { transform: translateY(-10vh) rotate(6deg) scale(1.1); opacity: 0; }
+      0% { transform: translateY(105vh) rotate(-6deg); opacity: 0; }
+      15% { opacity: 0.65; }
+      85% { opacity: 0.65; }
+      100% { transform: translateY(-10vh) rotate(6deg); opacity: 0; }
     }
 
     #fireworks-canvas {
@@ -329,6 +309,9 @@
   <div class="lantern" style="left: 78%; animation-delay: 3s;">🏮</div>
   <div class="lantern" style="left: 93%; animation-delay: 8s;">🪷</div>
 
+  <!-- ===================================================================== -->
+  <!-- 1. SPECTACULAR GRAND ROYAL RESULTS (?view=leaderboard)                -->
+  <!-- ===================================================================== -->
   <div id="leaderboard-only-view" class="hidden grand-royal-stage pb-12">
     <div class="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 pt-5 sm:pt-7">
       <header class="text-center mb-6 sm:mb-8">
@@ -412,6 +395,9 @@
     </div>
   </div>
 
+  <!-- ===================================================================== -->
+  <!-- 2. MAIN ROYAL VOTING & ADMIN PORTAL                                   -->
+  <!-- ===================================================================== -->
   <div id="main-voting-view" class="relative z-10 pb-14">
     <header class="hero-bg-wrapper pt-6 pb-8 px-4 mb-6">
       <div class="relative z-10 max-w-4xl mx-auto text-center">
@@ -457,6 +443,7 @@
 
     <div class="max-w-5xl mx-auto px-3 sm:px-4">
 
+      <!-- Hidden Admin Panel (?admin=true) -->
       <section id="admin-panel" class="hidden mb-6 bg-slate-900/95 border-2 border-rose-500/60 rounded-2xl p-4 sm:p-5 shadow-2xl">
         <div class="flex flex-col gap-3 mb-4 pb-3 border-b border-slate-700">
           <div class="flex flex-wrap items-center justify-between gap-2">
@@ -464,9 +451,14 @@
               <h2 class="text-sm sm:text-base font-bold text-rose-400">🛠️ Admin Management Panel</h2>
               <span class="text-xs text-slate-400">Real-Time Firebase + Google Sheet Sync</span>
             </div>
-            <button type="button" onclick="syncScoresToSheet()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow transition cursor-pointer">
-              📊 Sync คะแนนลง Google Sheet
-            </button>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" id="admin-sync-btn" onclick="syncScoresToSheet()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow transition cursor-pointer">
+                📊 Sync คะแนนลง Google Sheet
+              </button>
+              <a href="?view=leaderboard" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow transition">
+                <span>🎆</span> <span>GRAND ROYAL RESULTS</span>
+              </a>
+            </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -523,13 +515,15 @@
         </form>
       </section>
 
+      <!-- Voting Ended Banner -->
       <div id="voting-closed-banner" class="hidden mb-5 bg-gradient-to-r from-rose-950/90 via-red-950/90 to-rose-950/90 border border-rose-500/60 rounded-2xl p-3.5 text-center shadow-lg">
         <p id="voting-closed-text" class="text-rose-200 font-bold text-xs sm:text-sm">
           🔒 Voting Ended • ปิดการโหวตในหมวดนี้แล้ว
         </p>
       </div>
 
-      <section class="mb-7 royal-panel rounded-3xl p-4 sm:p-5 relative overflow-hidden">
+      <!-- Compact Royal Live Leaderboard (Hidden in Admin Mode) -->
+      <section id="live-leaderboard-section" class="mb-7 royal-panel rounded-3xl p-4 sm:p-5 relative overflow-hidden">
         <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-amber-400/20">
           <div class="flex items-center gap-2.5">
             <span class="text-2xl">👑</span>
@@ -564,6 +558,7 @@
         </div>
       </section>
 
+      <!-- Category Selector Tabs -->
       <section class="mb-5">
         <div class="flex items-center justify-between mb-3">
           <h2 class="text-sm sm:text-base font-bold text-amber-300 tracking-wide">
@@ -583,12 +578,14 @@
         </div>
       </section>
 
+      <!-- Voted Notification Banner -->
       <div id="category-voted-banner" class="hidden mb-5 bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-emerald-950/90 border border-emerald-400/50 rounded-2xl p-3.5 text-center shadow-lg">
         <p class="text-emerald-300 font-semibold text-xs sm:text-sm">
           ✅ โหวตแล้ว • You have already voted in this category.
         </p>
       </div>
 
+      <!-- Contestants Grid -->
       <section class="relative z-10 mb-12">
         <div id="contestants-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-5">
           <div class="col-span-full text-center py-12 text-amber-200/70 text-sm">
@@ -598,23 +595,22 @@
         </div>
       </section>
 
+      <!-- Royal Footer (Grand Royal Results button moved to Admin Panel) -->
       <footer class="text-center pt-6 border-t border-amber-400/20">
         <div class="flex items-center justify-center gap-3 mb-3 opacity-90">
           <img src="https://i.ibb.co/6R6hw6Tw/un.png" alt="UN" onerror="this.src='https://cdn-icons-png.flaticon.com/512/921/921490.png'" class="w-8 h-8 object-contain rounded-full">
           <span class="text-amber-400/60 text-xs">✦</span>
           <img src="https://i.ibb.co/V0RvySv7/thaihmec.png" alt="THAI HMEC" onerror="this.src='https://cdn-icons-png.flaticon.com/512/921/921490.png'" class="w-8 h-8 object-contain rounded-full">
         </div>
-        <p class="text-[11px] sm:text-xs text-slate-300 mb-3">
+        <p class="text-[11px] sm:text-xs text-slate-300">
           Loy Krathong Festival 2026 • THAI HMEC (UNMISS)
         </p>
-        <a href="?view=leaderboard" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl royal-panel hover:border-amber-400 text-amber-300 text-xs sm:text-sm font-bold tracking-wider transition shadow-lg">
-          <span>🎆</span> <span>GRAND ROYAL RESULTS</span>
-        </a>
       </footer>
 
     </div>
   </div>
 
+  <!-- Image Zoom Modal -->
   <div id="image-modal" onclick="closeImageModal()" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 cursor-pointer">
     <div class="relative max-w-lg w-full flex flex-col items-center" onclick="event.stopPropagation()">
       <button onclick="closeImageModal()" class="absolute -top-11 right-0 text-amber-200 text-2xl font-bold bg-slate-900/90 border border-amber-400/50 w-9 h-9 rounded-full flex items-center justify-center hover:bg-rose-600 hover:text-white transition">&times;</button>
@@ -649,6 +645,8 @@
     let uploadedBase64 = '';
     let previousScoresMap = {};
     let hasLoadedContestantsOnce = false;
+    let isSubmittingVote = false;
+    let isSyncingSheet = false;
 
     let categoryVotingOpen = {
       'Noppamas': true,
@@ -666,6 +664,17 @@
         localStorage.setItem('lk_pageant_device_id', devId);
       }
       return devId;
+    }
+
+    function applyAdminVisibilityMode() {
+      const lbSection = document.getElementById('live-leaderboard-section');
+      if (lbSection) {
+        if (isAdminMode) {
+          lbSection.classList.add('hidden');
+        } else {
+          lbSection.classList.remove('hidden');
+        }
+      }
     }
 
     function buildSortedLeaderboard() {
@@ -803,6 +812,11 @@
     };
 
     window.syncScoresToSheet = async function() {
+      if (isSyncingSheet) return;
+      isSyncingSheet = true;
+      const syncBtn = document.getElementById('admin-sync-btn');
+      if (syncBtn) syncBtn.disabled = true;
+
       Swal.fire({ title: 'กำลังซิงก์คะแนนลง Google Sheet...', allowOutsideClick: false, background: '#090d16', color: '#fef08a', didOpen: () => Swal.showLoading() });
       try {
         const response = await fetch(SCRIPT_URL, {
@@ -814,6 +828,9 @@
         Swal.fire({ icon: res.success ? 'success' : 'error', title: res.message || 'Done', background: '#090d16', color: '#fff' });
       } catch (err) {
         Swal.fire({ icon: 'error', title: 'Error', text: err.message, background: '#090d16', color: '#fff' });
+      } finally {
+        isSyncingSheet = false;
+        if (syncBtn) syncBtn.disabled = false;
       }
     };
 
@@ -824,7 +841,9 @@
         'Fancy Costume': (val && Array.isArray(val['Fancy Costume'])) ? val['Fancy Costume'] : []
       };
       if (!isLeaderboardOnly) renderContestants();
-      renderLeaderboard(buildSortedLeaderboard());
+      if (!isAdminMode || isLeaderboardOnly) {
+        renderLeaderboard(buildSortedLeaderboard());
+      }
     }
 
     function subscribeRealtimeFirebase() {
@@ -838,7 +857,11 @@
       onValue(ref(db, 'scores'), (snap) => {
         const val = snap.val();
         rawScores = (val && typeof val === 'object') ? val : { 'Noppamas': {}, 'Fancy Costume': {} };
-        renderLeaderboard(buildSortedLeaderboard());
+        if (isAdminMode && !isLeaderboardOnly) {
+          renderContestants();
+        } else {
+          renderLeaderboard(buildSortedLeaderboard());
+        }
       });
 
       onValue(ref(db, 'votingStatus'), (snap) => {
@@ -848,7 +871,6 @@
         }
       });
 
-      // Fallback REST check in case SDK listener is slow
       fetch(`${FIREBASE_DB_URL}/contestants.json?_t=${Date.now()}`)
         .then(r => r.json())
         .then(val => {
@@ -885,7 +907,8 @@
           isAdminMode = true;
           adminPin = pin;
           document.getElementById('admin-panel').classList.remove('hidden');
-          renderContestants();
+          applyAdminVisibilityMode();
+          if (hasLoadedContestantsOnce) renderContestants();
         }
       }
 
@@ -903,15 +926,21 @@
       updateVotingStatusUI();
     };
 
+    function getCandidateScore(category, no, name) {
+      const catScores = rawScores[category] || {};
+      const key = `${no}__${name}`;
+      return Number(catScores[key]) || 0;
+    }
+
     function renderContestants() {
       const grid = document.getElementById('contestants-grid');
       const list = allContestants[currentCategory] || [];
       const isCategoryOpen = !!categoryVotingOpen[currentCategory];
       const isAlreadyVoted = !!votedCategories[currentCategory];
-      const isDisabled = !isCategoryOpen || isAlreadyVoted;
+      const isDisabled = !isCategoryOpen || isAlreadyVoted || isSubmittingVote;
 
       const banner = document.getElementById('category-voted-banner');
-      if (isCategoryOpen && isAlreadyVoted) banner.classList.remove('hidden');
+      if (!isAdminMode && isCategoryOpen && isAlreadyVoted) banner.classList.remove('hidden');
       else banner.classList.add('hidden');
 
       if (list.length === 0) {
@@ -920,28 +949,41 @@
       }
 
       grid.innerHTML = list.map(c => {
-        let btnClass = 'w-full py-2.5 px-3 rounded-xl btn-royal-gold text-xs sm:text-sm tracking-wide transform active:scale-95 cursor-pointer';
-        let btnText = `🪷 โหวตเบอร์ ${c.no} • Vote No. ${c.no}`;
-
-        if (!isCategoryOpen) {
-          btnClass = 'w-full py-2.5 px-3 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-300 font-bold text-xs cursor-not-allowed';
-          btnText = 'Voting Ended';
-        } else if (isAlreadyVoted) {
-          btnClass = 'w-full py-2.5 px-3 rounded-xl bg-slate-800/90 border border-slate-700 text-slate-400 font-semibold text-xs cursor-not-allowed';
-          btnText = '✓ โหวตแล้ว • Voted';
-        }
-
         const safeName = String(c.name).replace(/'/g, "\\'");
         const safeImg = c.image || DEFAULT_AVATAR;
 
-        const deleteBtn = isAdminMode
-          ? `<button onclick="handleDeleteContestant('${c.no}', '${safeName}')" class="mt-2 w-full py-1.5 px-2 rounded-lg bg-rose-600/85 hover:bg-rose-600 text-white text-[11px] font-semibold transition">🗑️ Delete</button>`
-          : '';
+        let actionAreaHtml = '';
+        if (isAdminMode) {
+          const scoreVal = getCandidateScore(currentCategory, c.no, c.name).toLocaleString();
+          actionAreaHtml = `
+            <div class="w-full py-2 px-3 rounded-xl bg-amber-950/60 border border-amber-400/50 text-amber-200 text-xs sm:text-sm font-bold">
+              🏆 คะแนน: <span class="text-amber-300 font-black text-sm sm:text-base">${scoreVal}</span>
+            </div>
+            <button onclick="handleDeleteContestant('${c.no}', '${safeName}')" class="mt-2 w-full py-1.5 px-2 rounded-lg bg-rose-600/85 hover:bg-rose-600 text-white text-[11px] font-semibold transition cursor-pointer">🗑️ Delete</button>
+          `;
+        } else {
+          let btnClass = 'w-full py-2.5 px-3 rounded-xl btn-royal-gold text-xs sm:text-sm tracking-wide transform active:scale-95 cursor-pointer';
+          let btnText = `🪷 โหวตเบอร์ ${c.no} • Vote No. ${c.no}`;
+
+          if (!isCategoryOpen) {
+            btnClass = 'w-full py-2.5 px-3 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-300 font-bold text-xs cursor-not-allowed';
+            btnText = 'Voting Ended';
+          } else if (isAlreadyVoted) {
+            btnClass = 'w-full py-2.5 px-3 rounded-xl bg-slate-800/90 border border-slate-700 text-slate-400 font-semibold text-xs cursor-not-allowed';
+            btnText = '✓ โหวตแล้ว • Voted';
+          }
+
+          actionAreaHtml = `
+            <button ${isDisabled ? 'disabled' : ''} onclick="confirmVote('${c.no}', '${safeName}')" class="${btnClass}">
+              ${btnText}
+            </button>
+          `;
+        }
 
         return `
         <div class="card-contestant rounded-2xl overflow-hidden flex flex-col group">
           <div class="relative aspect-square bg-slate-900 overflow-hidden cursor-pointer" onclick="openImageModal('${safeImg}', 'เบอร์ ${c.no} (No. ${c.no}) - ${safeName}')">
-            <img src="${safeImg}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500"
+            <img src="${safeImg}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500"
               onerror="this.src='${DEFAULT_AVATAR}'">
             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition"></div>
             <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
@@ -954,10 +996,7 @@
           <div class="p-3.5 flex-1 flex flex-col justify-between text-center">
             <h3 class="font-semibold text-xs sm:text-sm text-amber-100 mb-3 line-clamp-1" title="${c.name}">${c.name}</h3>
             <div>
-              <button ${isDisabled ? 'disabled' : ''} onclick="confirmVote('${c.no}', '${safeName}')" class="${btnClass}">
-                ${btnText}
-              </button>
-              ${deleteBtn}
+              ${actionAreaHtml}
             </div>
           </div>
         </div>
@@ -1018,6 +1057,8 @@
 
       renderCompact(data['Noppamas'], 'lb-Noppamas');
       renderCompact(data['Fancy Costume'], 'lb-FancyCostume');
+
+      if (!isLeaderboardOnly) return;
 
       const renderProjectorTop3 = (list, categoryKey, elementId) => {
         const el = document.getElementById(elementId);
@@ -1120,6 +1161,8 @@
     }
 
     window.confirmVote = async function(no, contestantName) {
+      if (isSubmittingVote) return;
+
       const statusSnap = await get(ref(db, `votingStatus/${currentCategory}`));
       const isOpenNow = statusSnap.exists() ? Boolean(statusSnap.val()) : !!categoryVotingOpen[currentCategory];
 
@@ -1175,6 +1218,9 @@
 
       if (!result.isConfirmed) return;
 
+      isSubmittingVote = true;
+      renderContestants();
+
       Swal.fire({
         title: 'กำลังบันทึกคะแนน... • Submitting vote...',
         allowOutsideClick: false,
@@ -1197,6 +1243,7 @@
 
         votedCategories[currentCategory] = true;
         localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
+        isSubmittingVote = false;
         renderContestants();
 
         Swal.fire({
@@ -1208,6 +1255,7 @@
           color: '#fff'
         });
       } catch (err) {
+        isSubmittingVote = false;
         if (String(err.message || '').toUpperCase().includes('PERMISSION_DENIED')) {
           votedCategories[currentCategory] = true;
           localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
@@ -1221,6 +1269,7 @@
             color: '#fff'
           });
         } else {
+          renderContestants();
           Swal.fire({
             icon: 'error',
             title: 'โหวตไม่สำเร็จ • Voting Failed',
@@ -1375,40 +1424,41 @@
       const fireworks = [];
       const goldDust = [];
       const colors = ['#fef08a', '#fde047', '#f59e0b', '#fbbf24', '#f472b6', '#38bdf8'];
-      const dustCount = intenseFireworks ? 80 : 45;
+      const dustCount = intenseFireworks ? 60 : 20;
 
       for (let i = 0; i < dustCount; i++) {
         goldDust.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          r: Math.random() * 2.2 + 0.6,
-          vy: -(Math.random() * 0.55 + 0.15),
-          vx: (Math.random() - 0.5) * 0.35,
-          alpha: Math.random() * 0.8 + 0.2,
-          twinkle: Math.random() * 0.04 + 0.01
+          r: Math.random() * 2 + 0.6,
+          vy: -(Math.random() * 0.45 + 0.12),
+          vx: (Math.random() - 0.5) * 0.3,
+          alpha: Math.random() * 0.7 + 0.2,
+          twinkle: Math.random() * 0.03 + 0.01
         });
       }
 
       function createFirework() {
+        if (!intenseFireworks && fireworks.length > 45) return;
         const x = Math.random() * width;
         const y = Math.random() * (height * 0.42);
         const color = colors[Math.floor(Math.random() * colors.length)];
-        const count = intenseFireworks ? 64 : 30;
+        const count = intenseFireworks ? 56 : 18;
         for (let i = 0; i < count; i++) {
           const angle = (Math.PI * 2 * i) / count;
-          const speed = Math.random() * 4.2 + 1.2;
+          const speed = Math.random() * 3.8 + 1.1;
           fireworks.push({
             x, y,
             vx: Math.cos(angle) * speed,
             vy: Math.sin(angle) * speed,
             alpha: 1,
             color,
-            decay: Math.random() * 0.014 + 0.010
+            decay: Math.random() * 0.016 + 0.012
           });
         }
       }
 
-      setInterval(createFirework, intenseFireworks ? 950 : 2800);
+      setInterval(createFirework, intenseFireworks ? 1100 : 4500);
 
       function animate() {
         ctx.clearRect(0, 0, width, height);
@@ -1417,13 +1467,11 @@
           d.y += d.vy;
           d.x += d.vx;
           d.alpha += d.twinkle;
-          if (d.alpha > 0.95 || d.alpha < 0.2) d.twinkle = -d.twinkle;
+          if (d.alpha > 0.9 || d.alpha < 0.2) d.twinkle = -d.twinkle;
           if (d.y < 0) { d.y = height; d.x = Math.random() * width; }
           ctx.save();
           ctx.globalAlpha = Math.max(0.1, Math.min(1, d.alpha));
           ctx.fillStyle = '#fef08a';
-          ctx.shadowBlur = 8;
-          ctx.shadowColor = '#f59e0b';
           ctx.beginPath();
           ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
           ctx.fill();
@@ -1445,10 +1493,8 @@
           ctx.save();
           ctx.globalAlpha = p.alpha;
           ctx.fillStyle = p.color;
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = p.color;
           ctx.beginPath();
-          ctx.arc(p.x, p.y, 2.4, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, 2.2, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
         }
