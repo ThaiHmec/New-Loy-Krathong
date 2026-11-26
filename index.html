@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
+
   <style>
     :root {
       --gold-light: #fef08a;
@@ -19,8 +19,8 @@
     body {
       font-family: 'Prompt', 'Poppins', sans-serif;
       background-color: var(--bg-deep);
-      background-image: 
-        radial-gradient(circle at 50% 0%, rgba(29, 78, 216, 0.35) 0%, rgba(15, 23, 42, 0.92) 50%, #020617 100%);
+      background-image:
+        radial-gradient(circle at 50% 0%, rgba(29, 78, 216, 0.38) 0%, rgba(15, 23, 42, 0.92) 52%, #020617 100%);
       color: #f8fafc;
       min-height: 100vh;
       overflow-x: hidden;
@@ -29,7 +29,6 @@
 
     .font-royal { font-family: 'Cinzel', 'Prompt', serif; }
 
-    /* SweetAlert2 Custom GIF Styling */
     .swal2-popup .swal2-image {
       border-radius: 9999px;
       object-fit: cover;
@@ -39,7 +38,6 @@
       margin-bottom: 6px;
     }
 
-    /* Luxury Metallic Gold Text */
     .gold-gradient-text {
       background: linear-gradient(135deg, #fffbeb 0%, #fde047 25%, #f59e0b 50%, #fef08a 75%, #d97706 100%);
       background-size: 200% auto;
@@ -52,13 +50,12 @@
       to { background-position: 200% center; }
     }
 
-    /* Royal Glass & Gold Frame */
     .royal-panel {
       background: linear-gradient(160deg, rgba(15, 23, 42, 0.84) 0%, rgba(6, 12, 28, 0.95) 100%);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(251, 191, 36, 0.38);
-      box-shadow: 
+      box-shadow:
         0 10px 40px -10px rgba(0, 0, 0, 0.85),
         inset 0 1px 0 0 rgba(254, 240, 138, 0.25);
     }
@@ -77,7 +74,6 @@
       box-shadow: 0 15px 35px rgba(245, 158, 11, 0.25);
     }
 
-    /* Shimmer Vote Button */
     .btn-royal-gold {
       position: relative;
       overflow: hidden;
@@ -105,44 +101,14 @@
       35%, 100% { left: 130%; }
     }
 
-    /* Hero Banner Vignette Blending */
     .hero-bg-wrapper {
       position: relative;
       overflow: hidden;
+      background: radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.18) 0%, rgba(29, 78, 216, 0.22) 45%, rgba(2, 8, 23, 0.98) 100%);
       border-bottom: 1px solid rgba(251, 191, 36, 0.4);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
     }
 
-    .hero-bg-img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 35%;
-      opacity: 0.42;
-      filter: contrast(1.1) saturate(1.2);
-      animation: slowZoom 22s ease-in-out infinite alternate;
-    }
-
-    @keyframes slowZoom {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.08); }
-    }
-
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        180deg,
-        rgba(2, 8, 23, 0.6) 0%,
-        rgba(15, 23, 42, 0.35) 45%,
-        rgba(2, 8, 23, 0.94) 90%,
-        #020817 100%
-      );
-    }
-
-    /* Emblem Glow & Float */
     .emblem-glow {
       filter: drop-shadow(0 0 18px rgba(251, 191, 36, 0.5));
       animation: emblemFloat 5s ease-in-out infinite;
@@ -153,42 +119,11 @@
       50% { transform: translateY(-5px); }
     }
 
-    /* ===================================================================== */
-    /* SPECTACULAR GRAND ROYAL RESULTS STAGE (?view=leaderboard)             */
-    /* ===================================================================== */
     .grand-royal-stage {
       position: relative;
       min-height: 100vh;
       overflow: hidden;
-      background-color: #020817;
-    }
-
-    .grand-bg-backdrop {
-      position: fixed;
-      inset: -3%;
-      width: 106%;
-      height: 106%;
-      object-fit: cover;
-      object-position: center center;
-      z-index: 0;
-      filter: brightness(0.72) contrast(1.15) saturate(1.25);
-      animation: royalPanorama 26s ease-in-out infinite alternate;
-    }
-
-    @keyframes royalPanorama {
-      0% { transform: scale(1) translate(0px, 0px); }
-      50% { transform: scale(1.06) translate(-10px, -6px); }
-      100% { transform: scale(1.09) translate(10px, -12px); }
-    }
-
-    .grand-bg-vignette {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 50% 42%, rgba(254, 240, 138, 0.14) 0%, rgba(2, 8, 23, 0.52) 55%, rgba(2, 6, 23, 0.92) 100%),
-        linear-gradient(180deg, rgba(2, 8, 23, 0.72) 0%, rgba(2, 8, 23, 0.28) 38%, rgba(2, 8, 23, 0.55) 75%, rgba(2, 6, 23, 0.96) 100%);
+      background: radial-gradient(circle at 50% 15%, rgba(245, 158, 11, 0.2) 0%, rgba(29, 78, 216, 0.25) 45%, #020817 100%);
     }
 
     .royal-halo-ring {
@@ -223,9 +158,9 @@
     }
 
     .projector-column {
-      background: linear-gradient(180deg, rgba(6, 14, 34, 0.62) 0%, rgba(2, 6, 23, 0.85) 100%);
+      background: linear-gradient(180deg, rgba(6, 14, 34, 0.68) 0%, rgba(2, 6, 23, 0.88) 100%);
       border: 1.5px solid rgba(253, 224, 71, 0.55);
-      box-shadow: 
+      box-shadow:
         0 25px 60px rgba(0, 0, 0, 0.85),
         0 0 35px rgba(245, 158, 11, 0.18),
         inset 0 1px 0 rgba(254, 240, 138, 0.45);
@@ -259,33 +194,9 @@
       overflow: hidden;
     }
 
-    .gala-portrait-frame::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -80%;
-      width: 55%;
-      height: 200%;
-      background: linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(254, 249, 195, 0.42) 50%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      transform: rotate(25deg);
-      animation: portraitShimmer 4.5s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 15;
-    }
-
-    @keyframes portraitShimmer {
-      0% { left: -80%; }
-      40%, 100% { left: 150%; }
-    }
-
     .gala-portrait-frame.rank-1-frame {
       border: 4px solid #fde047;
-      box-shadow: 
+      box-shadow:
         0 0 42px rgba(253, 224, 71, 0.8),
         0 0 85px rgba(245, 158, 11, 0.45),
         inset 0 0 20px rgba(254, 240, 138, 0.5);
@@ -302,14 +213,6 @@
       height: 100%;
       object-fit: cover;
       object-position: top center;
-      transform-origin: center 20%;
-      animation: livingPortrait 9s ease-in-out infinite alternate;
-    }
-
-    @keyframes livingPortrait {
-      0% { transform: scale(1.02) translateY(0px) rotate(0deg); filter: brightness(1.02) contrast(1.05); }
-      50% { transform: scale(1.08) translateY(-3px) rotate(0.6deg); filter: brightness(1.08) contrast(1.08); }
-      100% { transform: scale(1.05) translateY(-1px) rotate(-0.6deg); filter: brightness(1.04) contrast(1.06); }
     }
 
     .floating-crown {
@@ -344,12 +247,6 @@
       border-radius: 9999px;
       background: radial-gradient(ellipse at center, rgba(253, 224, 71, 0.85) 0%, rgba(245, 158, 11, 0.35) 55%, transparent 80%);
       filter: blur(2px);
-      animation: pedestalGlow 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes pedestalGlow {
-      from { opacity: 0.65; transform: scaleX(0.92); }
-      to { opacity: 1; transform: scaleX(1.06); }
     }
 
     .score-pop {
@@ -436,25 +333,11 @@
   <!-- 1. SPECTACULAR GRAND ROYAL RESULTS (?view=leaderboard)                -->
   <!-- ===================================================================== -->
   <div id="leaderboard-only-view" class="hidden grand-royal-stage pb-12">
-    <img src="image_335cde.jpg" alt="Loy Krathong Golden Moon & Lotus River" class="grand-bg-backdrop">
-    <div class="grand-bg-vignette"></div>
-
-    <svg class="fixed top-2 left-2 w-24 h-24 sm:w-36 sm:h-36 text-amber-300/60 pointer-events-none z-10 animate-pulse" viewBox="0 0 100 100" fill="none">
-      <path d="M5 95 C5 40, 40 5, 95 5 M15 85 C15 45, 45 15, 85 15 M25 75 C25 50, 50 25, 75 25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <circle cx="12" cy="12" r="3" fill="currentColor"/>
-      <path d="M12 2 L15 9 L22 12 L15 15 L12 22 L9 15 L2 12 L9 9 Z" fill="currentColor"/>
-    </svg>
-    <svg class="fixed top-2 right-2 w-24 h-24 sm:w-36 sm:h-36 text-amber-300/60 pointer-events-none z-10 animate-pulse" style="transform: scaleX(-1);" viewBox="0 0 100 100" fill="none">
-      <path d="M5 95 C5 40, 40 5, 95 5 M15 85 C15 45, 45 15, 85 15 M25 75 C25 50, 50 25, 75 25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <circle cx="12" cy="12" r="3" fill="currentColor"/>
-      <path d="M12 2 L15 9 L22 12 L15 15 L12 22 L9 15 L2 12 L9 9 Z" fill="currentColor"/>
-    </svg>
-
     <div class="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 pt-5 sm:pt-7">
       <header class="text-center mb-6 sm:mb-8">
         <div class="flex items-center justify-center gap-4 sm:gap-8 mb-2.5">
           <img src="https://i.ibb.co/6R6hw6Tw/un.png" alt="UN Logo"
-            onerror="this.src='ดีไซน์ที่ยังไม่ได้ตั้งชื่อ.jpg'"
+            onerror="this.src='https://cdn-icons-png.flaticon.com/512/921/921490.png'"
             class="w-14 h-14 sm:w-20 sm:h-20 object-contain rounded-full bg-slate-950/70 p-1.5 border-2 border-amber-400/80 emblem-glow">
 
           <div class="flex flex-col items-center bg-slate-950/55 backdrop-blur-md px-5 py-2 rounded-2xl border border-amber-400/40 shadow-xl">
@@ -464,7 +347,7 @@
           </div>
 
           <img src="https://i.ibb.co/V0RvySv7/thaihmec.png" alt="THAI HMEC Logo"
-            onerror="this.src='44.jpg'"
+            onerror="this.src='https://cdn-icons-png.flaticon.com/512/921/921490.png'"
             class="w-14 h-14 sm:w-20 sm:h-20 object-contain rounded-full bg-slate-950/70 p-1 border-2 border-amber-400/80 emblem-glow" style="animation-delay: 1.5s;">
         </div>
 
@@ -477,7 +360,6 @@
           GRAND ROYAL RESULTS
         </h1>
 
-        <!-- สรุปคะแนนรวมทั้งหมด (Total Votes Summary) -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto mt-5">
           <div class="bg-slate-950/75 backdrop-blur-md border border-pink-400/50 rounded-2xl px-4 py-3 shadow-xl">
             <div class="text-[11px] sm:text-xs text-pink-200 font-semibold">👸 รวมคะแนน นางนพมาศ</div>
@@ -538,18 +420,15 @@
   <!-- ===================================================================== -->
   <div id="main-voting-view" class="relative z-10 pb-14">
     <header class="hero-bg-wrapper pt-6 pb-8 px-4 mb-6">
-      <img src="image_335cde.jpg" alt="Loy Krathong Moonlit River" class="hero-bg-img">
-      <div class="hero-overlay"></div>
-
       <div class="relative z-10 max-w-4xl mx-auto text-center">
         <div class="flex items-center justify-center gap-4 sm:gap-6 mb-3">
           <div class="relative group">
             <div class="absolute -inset-1 bg-amber-400/25 rounded-full blur-md"></div>
             <img src="https://i.ibb.co/6R6hw6Tw/un.png" alt="UN Logo"
-              onerror="this.src='ดีไซน์ที่ยังไม่ได้ตั้งชื่อ.jpg'"
+              onerror="this.src='https://cdn-icons-png.flaticon.com/512/921/921490.png'"
               class="relative w-14 h-14 sm:w-18 sm:h-18 object-contain rounded-full bg-slate-950/75 p-1.5 border border-amber-400/60 emblem-glow">
           </div>
-          
+
           <div class="flex flex-col items-center">
             <span class="text-[11px] sm:text-xs uppercase tracking-[0.22em] text-amber-300 font-bold">THAI HMEC • UNMISS</span>
             <div class="w-16 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent my-1"></div>
@@ -559,7 +438,7 @@
           <div class="relative group">
             <div class="absolute -inset-1 bg-amber-400/25 rounded-full blur-md"></div>
             <img src="https://i.ibb.co/V0RvySv7/thaihmec.png" alt="THAI HMEC Logo"
-              onerror="this.src='44.jpg'"
+              onerror="this.src='https://cdn-icons-png.flaticon.com/512/921/921490.png'"
               class="relative w-14 h-14 sm:w-18 sm:h-18 object-contain rounded-full bg-slate-950/75 p-1 border border-amber-400/60 emblem-glow" style="animation-delay: 1.5s;">
           </div>
         </div>
@@ -587,12 +466,16 @@
       <!-- Hidden Admin Panel (?admin=true) -->
       <section id="admin-panel" class="hidden mb-6 bg-slate-900/95 border-2 border-rose-500/60 rounded-2xl p-4 sm:p-5 shadow-2xl">
         <div class="flex flex-col gap-3 mb-4 pb-3 border-b border-slate-700">
-          <div>
-            <h2 class="text-sm sm:text-base font-bold text-rose-400">🛠️ Admin Management Panel</h2>
-            <span class="text-xs text-slate-400">Upload Photo & Control Real-Time Voting per Category</span>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="text-sm sm:text-base font-bold text-rose-400">🛠️ Admin Management Panel</h2>
+              <span class="text-xs text-slate-400">Real-Time Firebase + Google Sheet Sync</span>
+            </div>
+            <button type="button" onclick="syncScoresToSheet()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow transition cursor-pointer">
+              📊 Sync คะแนนลง Google Sheet
+            </button>
           </div>
 
-          <!-- ปุ่ม ปิด-เปิดการโหวต แยก 2 หมวด -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div class="flex items-center justify-between gap-2 bg-slate-800/80 border border-pink-400/30 rounded-xl p-3">
               <div>
@@ -621,7 +504,7 @@
             </div>
           </div>
         </div>
-        
+
         <form onsubmit="handleAddContestant(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
           <select id="admin-category" class="px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-600 text-xs sm:text-sm text-white">
             <option value="Noppamas">1. นางนพมาศ (Noppamas)</option>
@@ -631,7 +514,7 @@
             class="px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-600 text-xs sm:text-sm text-white">
           <input type="text" id="admin-name" placeholder="Contestant / Team Name" required
             class="px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-600 text-xs sm:text-sm text-white">
-          
+
           <div class="sm:col-span-3 flex flex-col sm:flex-row items-center gap-3 bg-slate-800/80 p-3 rounded-xl border border-dashed border-amber-400/50">
             <label class="cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition shrink-0">
               📷 Choose Photo File
@@ -647,7 +530,7 @@
         </form>
       </section>
 
-      <!-- Current Category Voting Ended Banner -->
+      <!-- Voting Ended Banner -->
       <div id="voting-closed-banner" class="hidden mb-5 bg-gradient-to-r from-rose-950/90 via-red-950/90 to-rose-950/90 border border-rose-500/60 rounded-2xl p-3.5 text-center shadow-lg">
         <p id="voting-closed-text" class="text-rose-200 font-bold text-xs sm:text-sm">
           🔒 Voting Ended • ปิดการโหวตในหมวดนี้แล้ว
@@ -670,7 +553,7 @@
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Live
           </span>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-slate-950/65 rounded-2xl p-4 border border-pink-400/25 shadow-inner">
             <h3 class="text-xs sm:text-sm font-bold text-pink-300 mb-2.5 flex items-center justify-between">
@@ -730,9 +613,9 @@
       <!-- Royal Footer -->
       <footer class="text-center pt-6 border-t border-amber-400/20">
         <div class="flex items-center justify-center gap-3 mb-3 opacity-90">
-          <img src="https://i.ibb.co/6R6hw6Tw/un.png" alt="UN" onerror="this.src='ดีไซน์ที่ยังไม่ได้ตั้งชื่อ.jpg'" class="w-8 h-8 object-contain rounded-full">
+          <img src="https://i.ibb.co/6R6hw6Tw/un.png" alt="UN" onerror="this.src='https://cdn-icons-png.flaticon.com/512/921/921490.png'" class="w-8 h-8 object-contain rounded-full">
           <span class="text-amber-400/60 text-xs">✦</span>
-          <img src="https://i.ibb.co/V0RvySv7/thaihmec.png" alt="THAI HMEC" onerror="this.src='44.jpg'" class="w-8 h-8 object-contain rounded-full">
+          <img src="https://i.ibb.co/V0RvySv7/thaihmec.png" alt="THAI HMEC" onerror="this.src='https://cdn-icons-png.flaticon.com/512/921/921490.png'" class="w-8 h-8 object-contain rounded-full">
         </div>
         <p class="text-[11px] sm:text-xs text-slate-300 mb-3">
           Loy Krathong Festival 2026 • THAI HMEC (UNMISS)
@@ -754,9 +637,17 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, onValue, runTransaction, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const FIREBASE_DB_URL = 'https://loy-kratong-2e31e-default-rtdb.asia-southeast1.firebasedatabase.app';
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3kYk9j4rV_gg87I3va6DgS8-QOVWJ4ayTRbwXHaXDDh_Hv0Z8scCkWJWspOfm1Vr0/exec';
     const IMGBB_API_KEY = '0a74be3d5fcae1d6990d964a97fece0e';
+    const DEFAULT_AVATAR = 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png';
+
+    const app = initializeApp({ databaseURL: FIREBASE_DB_URL });
+    const db = getDatabase(app);
 
     const CATEGORY_BILINGUAL_MAP = {
       'Noppamas': 'นางนพมาศ • Noppamas',
@@ -764,6 +655,7 @@
     };
 
     let allContestants = { 'Noppamas': [], 'Fancy Costume': [] };
+    let rawScores = { 'Noppamas': {}, 'Fancy Costume': {} };
     let currentCategory = 'Noppamas';
     let isAdminMode = false;
     let isLeaderboardOnly = false;
@@ -776,8 +668,7 @@
       'Fancy Costume': true
     };
 
-    // ซิงก์สถานะการโหวตกับ QR_Logs ในชีตผ่าน API เป็นหลัก
-    let votedCategories = {};
+    let votedCategories = JSON.parse(localStorage.getItem('lk_voted_categories_2026') || '{}');
 
     function getOrCreateDeviceId() {
       let devId = localStorage.getItem('lk_pageant_device_id');
@@ -790,13 +681,29 @@
       return devId;
     }
 
-    function applyServerVotingStatus(votingStatusObj) {
+    function buildSortedLeaderboard() {
+      const boards = { 'Noppamas': [], 'Fancy Costume': [] };
+      ['Noppamas', 'Fancy Costume'].forEach(cat => {
+        const list = allContestants[cat] || [];
+        const scoreMap = rawScores[cat] || {};
+        boards[cat] = list.map(c => {
+          const key = `${c.no}__${c.name}`;
+          return {
+            no: c.no,
+            name: c.name,
+            image: c.image || DEFAULT_AVATAR,
+            score: Number(scoreMap[key]) || 0
+          };
+        }).sort((a, b) => b.score - a.score);
+      });
+      return boards;
+    }
+
+    function applyVotingStatus(votingStatusObj) {
       if (!votingStatusObj) return;
       ['Noppamas', 'Fancy Costume'].forEach(cat => {
         if (typeof votingStatusObj[cat] === 'boolean') {
           categoryVotingOpen[cat] = votingStatusObj[cat];
-        } else if (typeof votingStatusObj[cat] === 'string') {
-          categoryVotingOpen[cat] = votingStatusObj[cat].toLowerCase() !== 'closed' && votingStatusObj[cat].toLowerCase() !== 'false';
         }
       });
       updateVotingStatusUI();
@@ -848,7 +755,7 @@
       }
     }
 
-    async function toggleCategoryVoting(category) {
+    window.toggleCategoryVoting = async function(category) {
       const nextState = !categoryVotingOpen[category];
       const catLabel = CATEGORY_BILINGUAL_MAP[category] || category;
 
@@ -891,13 +798,7 @@
         const res = await response.json();
 
         if (res.success) {
-          if (res.votingStatus) {
-            applyServerVotingStatus(res.votingStatus);
-          } else {
-            categoryVotingOpen[category] = nextState;
-            updateVotingStatusUI();
-          }
-
+          if (res.votingStatus) applyVotingStatus(res.votingStatus);
           Swal.fire({
             icon: 'success',
             title: nextState ? 'เปิดการโหวตเรียบร้อยแล้ว' : 'ปิดการโหวตเรียบร้อยแล้ว',
@@ -907,25 +808,53 @@
             color: '#fff'
           });
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'อัปเดตสถานะไม่สำเร็จ',
-            text: res.message || 'กรุณาตรวจสอบสิทธิ์หรือ Apps Script',
-            confirmButtonColor: '#ef4444',
-            background: '#090d16',
-            color: '#fff'
-          });
+          Swal.fire({ icon: 'error', title: 'อัปเดตสถานะไม่สำเร็จ', text: res.message, background: '#090d16', color: '#fff' });
         }
       } catch (err) {
-        Swal.fire({
-          icon: 'error',
-          title: 'เชื่อมต่อไม่ได้ • Connection Error',
-          text: err.message,
-          confirmButtonColor: '#ef4444',
-          background: '#090d16',
-          color: '#fff'
-        });
+        Swal.fire({ icon: 'error', title: 'Connection Error', text: err.message, background: '#090d16', color: '#fff' });
       }
+    };
+
+    window.syncScoresToSheet = async function() {
+      Swal.fire({ title: 'กำลังซิงก์คะแนนลง Google Sheet...', allowOutsideClick: false, background: '#090d16', color: '#fef08a', didOpen: () => Swal.showLoading() });
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'syncToSheet' })
+        });
+        const res = await response.json();
+        Swal.fire({ icon: res.success ? 'success' : 'error', title: res.message || 'Done', background: '#090d16', color: '#fff' });
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Error', text: err.message, background: '#090d16', color: '#fff' });
+      }
+    };
+
+    function subscribeRealtimeFirebase() {
+      onValue(ref(db, 'contestants'), (snap) => {
+        const val = snap.val();
+        if (val && typeof val === 'object') {
+          allContestants = {
+            'Noppamas': Array.isArray(val['Noppamas']) ? val['Noppamas'] : [],
+            'Fancy Costume': Array.isArray(val['Fancy Costume']) ? val['Fancy Costume'] : []
+          };
+          if (!isLeaderboardOnly) renderContestants();
+          renderLeaderboard(buildSortedLeaderboard());
+        }
+      });
+
+      onValue(ref(db, 'scores'), (snap) => {
+        const val = snap.val();
+        rawScores = (val && typeof val === 'object') ? val : { 'Noppamas': {}, 'Fancy Costume': {} };
+        renderLeaderboard(buildSortedLeaderboard());
+      });
+
+      onValue(ref(db, 'votingStatus'), (snap) => {
+        const val = snap.val();
+        if (val && typeof val === 'object') {
+          applyVotingStatus(val);
+        }
+      });
     }
 
     window.onload = async function() {
@@ -954,62 +883,14 @@
           isAdminMode = true;
           adminPin = pin;
           document.getElementById('admin-panel').classList.remove('hidden');
+          renderContestants();
         }
       }
 
-      await loadData();
-      setInterval(refreshLeaderboard, isLeaderboardOnly ? 3000 : 4000);
+      subscribeRealtimeFirebase();
     };
 
-    async function loadData() {
-      try {
-        const deviceId = encodeURIComponent(getOrCreateDeviceId());
-        const response = await fetch(`${SCRIPT_URL}?action=getInitialData&deviceId=${deviceId}&_t=${Date.now()}`);
-        const data = await response.json();
-        allContestants = data.contestants || allContestants;
-
-        // รับรายการหมวดที่โหวตแล้วจาก API (QR_Logs) มาทับ votedCategories แทนการเชื่อค่าใน localStorage อย่างเดียว
-        if (data.votedCategories && typeof data.votedCategories === 'object') {
-          votedCategories = data.votedCategories;
-          localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
-        }
-
-        if (data.votingStatus) {
-          applyServerVotingStatus(data.votingStatus);
-        }
-        if (!isLeaderboardOnly) renderContestants();
-        renderLeaderboard(data.leaderboard || {});
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    async function refreshLeaderboard() {
-      try {
-        const deviceId = encodeURIComponent(getOrCreateDeviceId());
-        const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard&deviceId=${deviceId}&_t=${Date.now()}`);
-        const data = await response.json();
-
-        if (data.votedCategories && typeof data.votedCategories === 'object') {
-          const prevStr = JSON.stringify(votedCategories);
-          const nextStr = JSON.stringify(data.votedCategories);
-          if (prevStr !== nextStr) {
-            votedCategories = data.votedCategories;
-            localStorage.setItem('lk_voted_categories_2026', nextStr);
-            if (!isLeaderboardOnly) renderContestants();
-          }
-        }
-
-        if (data.votingStatus) {
-          applyServerVotingStatus(data.votingStatus);
-        }
-        renderLeaderboard(data.leaderboard || {});
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    function switchCategory(category) {
+    window.switchCategory = function(category) {
       currentCategory = category;
       ['Noppamas', 'Fancy Costume'].forEach(cat => {
         const btn = document.getElementById(`tab-${cat}`);
@@ -1018,7 +899,7 @@
           : 'tab-inactive py-3.5 px-3 rounded-2xl border text-xs sm:text-sm transition text-center flex flex-col items-center justify-center gap-0.5';
       });
       updateVotingStatusUI();
-    }
+    };
 
     function renderContestants() {
       const grid = document.getElementById('contestants-grid');
@@ -1048,15 +929,18 @@
           btnText = '✓ โหวตแล้ว • Voted';
         }
 
-        const deleteBtn = isAdminMode 
-          ? `<button onclick="handleDeleteContestant('${c.no}', '${c.name.replace(/'/g, "\\'")}')" class="mt-2 w-full py-1.5 px-2 rounded-lg bg-rose-600/85 hover:bg-rose-600 text-white text-[11px] font-semibold transition">🗑️ Delete</button>`
+        const safeName = String(c.name).replace(/'/g, "\\'");
+        const safeImg = c.image || DEFAULT_AVATAR;
+
+        const deleteBtn = isAdminMode
+          ? `<button onclick="handleDeleteContestant('${c.no}', '${safeName}')" class="mt-2 w-full py-1.5 px-2 rounded-lg bg-rose-600/85 hover:bg-rose-600 text-white text-[11px] font-semibold transition">🗑️ Delete</button>`
           : '';
 
         return `
         <div class="card-contestant rounded-2xl overflow-hidden flex flex-col group">
-          <div class="relative aspect-square bg-slate-900 overflow-hidden cursor-pointer" onclick="openImageModal('${c.image}', 'เบอร์ ${c.no} (No. ${c.no}) - ${c.name.replace(/'/g, "\\'")}')">
-            <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500"
-              onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140047.png'">
+          <div class="relative aspect-square bg-slate-900 overflow-hidden cursor-pointer" onclick="openImageModal('${safeImg}', 'เบอร์ ${c.no} (No. ${c.no}) - ${safeName}')">
+            <img src="${safeImg}" alt="${c.name}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500"
+              onerror="this.src='${DEFAULT_AVATAR}'">
             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition"></div>
             <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
               <span class="bg-slate-950/85 text-amber-300 text-[11px] px-3 py-1 rounded-full backdrop-blur-md border border-amber-400/50 shadow-lg">🔍 ขยายดูภาพ • Tap to Zoom</span>
@@ -1068,25 +952,26 @@
           <div class="p-3.5 flex-1 flex flex-col justify-between text-center">
             <h3 class="font-semibold text-xs sm:text-sm text-amber-100 mb-3 line-clamp-1" title="${c.name}">${c.name}</h3>
             <div>
-              <button ${isDisabled ? 'disabled' : ''} onclick="confirmVote('${c.no}', '${c.name.replace(/'/g, "\\'")}')" class="${btnClass}">
+              <button ${isDisabled ? 'disabled' : ''} onclick="confirmVote('${c.no}', '${safeName}')" class="${btnClass}">
                 ${btnText}
               </button>
               ${deleteBtn}
             </div>
           </div>
         </div>
-      `}).join('');
+      `;
+      }).join('');
     }
 
-    function openImageModal(imgSrc, caption) {
+    window.openImageModal = function(imgSrc, caption) {
       document.getElementById('modal-img').src = imgSrc;
       document.getElementById('modal-caption').textContent = caption;
       document.getElementById('image-modal').classList.remove('hidden');
-    }
+    };
 
-    function closeImageModal() {
+    window.closeImageModal = function() {
       document.getElementById('image-modal').classList.add('hidden');
-    }
+    };
 
     function updateGrandTotalVotes(data) {
       const noppamasList = data['Noppamas'] || [];
@@ -1201,8 +1086,8 @@
 
                 <div class="gala-portrait-frame ${st.frameClass} ${st.photoHeight} w-full">
                   <img src="${item.image}" alt="${item.name}"
-                    onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140047.png'"
-                    class="animated-winner-photo" style="animation-delay: ${idx * 1.4}s;">
+                    onerror="this.src='${DEFAULT_AVATAR}'"
+                    class="animated-winner-photo">
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-amber-200/10 pointer-events-none"></div>
                 </div>
 
@@ -1232,10 +1117,13 @@
       renderProjectorTop3(data['Fancy Costume'], 'FancyCostume', 'full-lb-FancyCostume');
     }
 
-    async function confirmVote(no, contestantName) {
-      await refreshLeaderboard();
+    window.confirmVote = async function(no, contestantName) {
+      const statusSnap = await get(ref(db, `votingStatus/${currentCategory}`));
+      const isOpenNow = statusSnap.exists() ? Boolean(statusSnap.val()) : !!categoryVotingOpen[currentCategory];
 
-      if (!categoryVotingOpen[currentCategory]) {
+      if (!isOpenNow) {
+        categoryVotingOpen[currentCategory] = false;
+        updateVotingStatusUI();
         Swal.fire({
           icon: 'warning',
           title: 'Voting Ended',
@@ -1261,7 +1149,7 @@
 
       const catLabel = CATEGORY_BILINGUAL_MAP[currentCategory] || currentCategory;
 
-      Swal.fire({
+      const result = await Swal.fire({
         title: 'ยืนยันการโหวต? • Confirm Your Vote?',
         html: `
           <div class="text-left bg-slate-900/90 p-3.5 rounded-xl border border-amber-400/40 text-xs sm:text-sm space-y-2 mt-2">
@@ -1281,53 +1169,71 @@
         cancelButtonText: 'ยกเลิก • Cancel',
         background: '#090d16',
         color: '#fff'
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          Swal.fire({ title: 'กำลังบันทึกคะแนน... • Submitting vote...', allowOutsideClick: false, background: '#090d16', color: '#fef08a', didOpen: () => Swal.showLoading() });
-
-          try {
-            const response = await fetch(SCRIPT_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({
-                category: currentCategory,
-                contestantNo: no,
-                contestantName: contestantName,
-                deviceId: getOrCreateDeviceId()
-              })
-            });
-            const res = await response.json();
-
-            if (res.votingStatus) {
-              applyServerVotingStatus(res.votingStatus);
-            }
-
-            if (res.success) {
-              votedCategories[currentCategory] = true;
-              localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
-              renderContestants();
-              renderLeaderboard(res.leaderboard);
-
-              Swal.fire({ icon: 'success', title: 'โหวตสำเร็จ! • Vote Successful!', text: res.message, confirmButtonColor: '#f59e0b', background: '#090d16', color: '#fff' });
-            } else {
-              if (res.message && res.message.toLowerCase().includes('closed')) {
-                categoryVotingOpen[currentCategory] = false;
-                updateVotingStatusUI();
-              } else if (res.message && res.message.includes('already voted')) {
-                votedCategories[currentCategory] = true;
-                localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
-                renderContestants();
-              }
-              Swal.fire({ icon: 'error', title: 'โหวตไม่สำเร็จ • Voting Failed', text: res.message, confirmButtonColor: '#ef4444', background: '#090d16', color: '#fff' });
-            }
-          } catch (err) {
-            Swal.fire({ icon: 'error', title: 'เชื่อมต่อไม่ได้ • Connection Error', text: 'Please try again.', confirmButtonColor: '#ef4444', background: '#090d16', color: '#fff' });
-          }
-        }
       });
-    }
 
-    function previewAdminImage(event) {
+      if (!result.isConfirmed) return;
+
+      Swal.fire({
+        title: 'กำลังบันทึกคะแนน... • Submitting vote...',
+        allowOutsideClick: false,
+        background: '#090d16',
+        color: '#fef08a',
+        didOpen: () => Swal.showLoading()
+      });
+
+      try {
+        const deviceId = getOrCreateDeviceId();
+        const receiptRef = ref(db, `voteReceipts/${currentCategory}/${deviceId}`);
+
+        // บันทึกใบเสร็จโหวตของอุปกรณ์นี้ (Rule บังคับว่าเขียนได้เฉพาะตอนยังไม่เคยมี)
+        await set(receiptRef, true);
+
+        // บวกคะแนนแบบ Atomic Transaction ไม่ทับกันเมื่อ 350 คนกดพร้อมกัน
+        const candidateKey = `${no}__${contestantName}`;
+        const scoreRef = ref(db, `scores/${currentCategory}/${candidateKey}`);
+        await runTransaction(scoreRef, (currentScore) => {
+          return (Number(currentScore) || 0) + 1;
+        });
+
+        votedCategories[currentCategory] = true;
+        localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
+        renderContestants();
+
+        Swal.fire({
+          icon: 'success',
+          title: 'โหวตสำเร็จ! • Vote Successful!',
+          text: `บันทึกคะแนนให้ เบอร์ ${no} - ${contestantName} เรียบร้อยแล้ว`,
+          confirmButtonColor: '#f59e0b',
+          background: '#090d16',
+          color: '#fff'
+        });
+      } catch (err) {
+        if (String(err.message || '').toUpperCase().includes('PERMISSION_DENIED')) {
+          votedCategories[currentCategory] = true;
+          localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
+          renderContestants();
+          Swal.fire({
+            icon: 'info',
+            title: 'โหวตแล้ว • Already Voted',
+            text: `อุปกรณ์นี้ได้ใช้สิทธิ์โหวตในหมวด ${catLabel} ไปแล้ว`,
+            confirmButtonColor: '#f59e0b',
+            background: '#090d16',
+            color: '#fff'
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'โหวตไม่สำเร็จ • Voting Failed',
+            text: err.message || 'Please try again.',
+            confirmButtonColor: '#ef4444',
+            background: '#090d16',
+            color: '#fff'
+          });
+        }
+      }
+    };
+
+    window.previewAdminImage = function(event) {
       const file = event.target.files[0];
       if (!file) return;
 
@@ -1364,9 +1270,9 @@
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
-    }
+    };
 
-    async function handleAddContestant(e) {
+    window.handleAddContestant = async function(e) {
       e.preventDefault();
       if (!uploadedBase64) {
         Swal.fire({ icon: 'warning', title: 'Please select a photo', background: '#090d16', color: '#fff' });
@@ -1411,10 +1317,6 @@
         const res = await response.json();
 
         if (res.success) {
-          allContestants = res.data.contestants;
-          renderContestants();
-          renderLeaderboard(res.data.leaderboard);
-
           document.getElementById('admin-no').value = '';
           document.getElementById('admin-name').value = '';
           document.getElementById('admin-image-file').value = '';
@@ -1429,12 +1331,12 @@
       } catch (err) {
         Swal.fire({ icon: 'error', title: 'Error', text: err.message, background: '#090d16', color: '#fff' });
       }
-    }
+    };
 
-    async function handleDeleteContestant(no, name) {
+    window.handleDeleteContestant = async function(no, name) {
       const confirm = await Swal.fire({
         title: `Delete ${name}?`,
-        text: `Remove from ${currentCategory} sheet?`,
+        text: `Remove from ${currentCategory} sheet & Firebase?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
@@ -1452,19 +1354,12 @@
             body: JSON.stringify({ action: 'deleteContestant', pin: adminPin, category: currentCategory, no, name })
           });
           const res = await response.json();
-          if (res.success) {
-            allContestants = res.data.contestants;
-            renderContestants();
-            renderLeaderboard(res.data.leaderboard);
-            Swal.fire({ icon: 'success', title: 'Deleted!', text: res.message, background: '#090d16', color: '#fff' });
-          } else {
-            Swal.fire({ icon: 'error', title: 'Failed', text: res.message, background: '#090d16', color: '#fff' });
-          }
+          Swal.fire({ icon: res.success ? 'success' : 'error', title: res.success ? 'Deleted!' : 'Failed', text: res.message, background: '#090d16', color: '#fff' });
         } catch (err) {
           Swal.fire({ icon: 'error', title: 'Error', text: err.message, background: '#090d16', color: '#fff' });
         }
       }
-    }
+    };
 
     function startAmbientEffects(intenseFireworks) {
       const canvas = document.getElementById('fireworks-canvas');
