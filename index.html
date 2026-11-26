@@ -29,6 +29,17 @@
 
     .font-royal { font-family: 'Cinzel', 'Prompt', serif; }
 
+    /* SweetAlert2 Custom GIF Styling */
+    .swal2-popup .swal2-image {
+      border-radius: 9999px;
+      object-fit: cover;
+      border: 2.5px solid #fbbf24;
+      box-shadow: 0 0 24px rgba(251, 191, 36, 0.45);
+      margin-top: 12px;
+      margin-bottom: 6px;
+    }
+
+    /* Luxury Metallic Gold Text */
     .gold-gradient-text {
       background: linear-gradient(135deg, #fffbeb 0%, #fde047 25%, #f59e0b 50%, #fef08a 75%, #d97706 100%);
       background-size: 200% auto;
@@ -41,18 +52,19 @@
       to { background-position: 200% center; }
     }
 
+    /* Royal Glass & Gold Frame */
     .royal-panel {
-      background: linear-gradient(160deg, rgba(15, 23, 42, 0.86) 0%, rgba(6, 12, 28, 0.96) 100%);
+      background: linear-gradient(160deg, rgba(15, 23, 42, 0.84) 0%, rgba(6, 12, 28, 0.95) 100%);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(251, 191, 36, 0.38);
       box-shadow: 
-        0 12px 42px -12px rgba(0, 0, 0, 0.88),
+        0 10px 40px -10px rgba(0, 0, 0, 0.85),
         inset 0 1px 0 0 rgba(254, 240, 138, 0.25);
     }
 
     .card-contestant {
-      background: linear-gradient(180deg, rgba(23, 37, 69, 0.86) 0%, rgba(9, 15, 32, 0.97) 100%);
+      background: linear-gradient(180deg, rgba(23, 37, 69, 0.85) 0%, rgba(9, 15, 32, 0.96) 100%);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(251, 191, 36, 0.32);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.65);
@@ -65,6 +77,7 @@
       box-shadow: 0 15px 35px rgba(245, 158, 11, 0.25);
     }
 
+    /* Shimmer Vote Button */
     .btn-royal-gold {
       position: relative;
       overflow: hidden;
@@ -92,6 +105,7 @@
       35%, 100% { left: 130%; }
     }
 
+    /* Hero Banner Vignette Blending */
     .hero-bg-wrapper {
       position: relative;
       overflow: hidden;
@@ -121,13 +135,14 @@
       inset: 0;
       background: linear-gradient(
         180deg,
-        rgba(2, 8, 23, 0.62) 0%,
-        rgba(15, 23, 42, 0.36) 45%,
+        rgba(2, 8, 23, 0.6) 0%,
+        rgba(15, 23, 42, 0.35) 45%,
         rgba(2, 8, 23, 0.94) 90%,
         #020817 100%
       );
     }
 
+    /* Emblem Glow & Float */
     .emblem-glow {
       filter: drop-shadow(0 0 18px rgba(251, 191, 36, 0.5));
       animation: emblemFloat 5s ease-in-out infinite;
@@ -138,6 +153,9 @@
       50% { transform: translateY(-5px); }
     }
 
+    /* ===================================================================== */
+    /* PROJECTOR LEADERBOARD STYLING                                         */
+    /* ===================================================================== */
     .projector-stage {
       background:
         radial-gradient(circle at 88% 12%, rgba(254, 240, 138, 0.28) 0%, transparent 24%),
@@ -156,9 +174,9 @@
     }
 
     .projector-column {
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(2, 6, 23, 0.94) 100%);
-      border: 1.5px solid rgba(251, 191, 36, 0.48);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.82), inset 0 1px 0 rgba(254, 240, 138, 0.32);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.78) 0%, rgba(2, 6, 23, 0.92) 100%);
+      border: 1.5px solid rgba(251, 191, 36, 0.45);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(254, 240, 138, 0.3);
       backdrop-filter: blur(14px);
     }
 
@@ -206,6 +224,7 @@
       100% { transform: scale(1); }
     }
 
+    /* Floating Lanterns & Sparkles */
     .lantern {
       position: fixed;
       font-size: 22px;
@@ -233,6 +252,7 @@
       z-index: 2;
     }
 
+    /* Category Tabs */
     .tab-active {
       background: linear-gradient(135deg, #fde047 0%, #f59e0b 55%, #b45309 100%);
       color: #030712;
@@ -268,22 +288,28 @@
 </head>
 <body class="relative pb-14">
 
+  <!-- Ambient Canvas (Gold Sparkles & Fireworks) -->
   <canvas id="fireworks-canvas"></canvas>
   <div class="river-horizon"></div>
 
+  <!-- Floating Festive Elements -->
   <div class="lantern" style="left: 6%; animation-delay: 0s;">🏮</div>
   <div class="lantern" style="left: 24%; animation-delay: 6s;">🪷</div>
   <div class="lantern" style="left: 50%; animation-delay: 11s;">✨</div>
   <div class="lantern" style="left: 76%; animation-delay: 3s;">🏮</div>
-  <div class="lantern" style="left: 92%; animation-delay: 8s;">🪷</div>
+  <div class="lantern" style="left: 91%; animation-delay: 8s;">🪷</div>
 
-  <!-- 1. PROJECTOR LIVE LEADERBOARD (?view=leaderboard) -->
+  <!-- ===================================================================== -->
+  <!-- 1. PROJECTOR LIVE LEADERBOARD (?view=leaderboard) - GRAND ROYAL RESULTS -->
+  <!-- ===================================================================== -->
   <div id="leaderboard-only-view" class="hidden projector-stage relative z-10 min-h-screen pb-10">
+    <!-- Projector Top Header -->
     <div class="hero-bg-wrapper pt-5 pb-6 px-4 mb-6">
       <img src="image_3bd7a6.jpg" alt="Loy Krathong Moonlit Background" class="hero-bg-img">
       <div class="hero-overlay"></div>
 
-      <div class="relative z-10 max-w-[1500px] mx-auto text-center">
+      <div class="relative z-10 max-w-7xl mx-auto text-center">
+        <!-- Official Logos Row -->
         <div class="flex items-center justify-center gap-5 sm:gap-8 mb-2.5">
           <img src="https://i.ibb.co/6R6hw6Tw/un.png" alt="UN Logo"
             onerror="this.src='ดีไซน์ที่ยังไม่ได้ตั้งชื่อ.jpg'"
@@ -311,31 +337,36 @@
       </div>
     </div>
 
-    <div class="max-w-[1500px] mx-auto px-3 sm:px-6">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 xl:gap-8">
+    <!-- 2 Categories Projector Grid -->
+    <div class="max-w-7xl mx-auto px-3 sm:px-6">
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-7">
+
+        <!-- Category 1: นางนพมาศ / Noppamas -->
         <div class="projector-column rounded-[2rem] p-5 sm:p-6 flex flex-col relative">
           <div class="text-center pb-3.5 mb-5 border-b-2 border-amber-400/35">
-            <span class="inline-block px-3.5 py-0.5 rounded-full bg-pink-500/20 border border-pink-400/40 text-pink-200 text-xs font-bold tracking-wider mb-1">
+            <span class="inline-block px-3.5 py-0.5 rounded-full bg-pink-500/20 border border-pink-400/40 text-pink-200 text-xs font-bold tracking-wider mb-1.5">
               อันดับ 1 – 3 • TOP 1 – 3
             </span>
-            <h2 class="text-xl sm:text-2xl xl:text-3xl font-extrabold gold-gradient-text">
+            <h2 class="text-2xl sm:text-3xl font-extrabold gold-gradient-text">
               👸 นางนพมาศ • Noppamas
             </h2>
           </div>
-          <div id="full-lb-Noppamas" class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end flex-1"></div>
+          <div id="full-lb-Noppamas" class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 items-end flex-1"></div>
         </div>
 
+        <!-- Category 2: ชุดแฟนซี 4 ภาค / Fancy Costume -->
         <div class="projector-column rounded-[2rem] p-5 sm:p-6 flex flex-col relative">
           <div class="text-center pb-3.5 mb-5 border-b-2 border-amber-400/35">
-            <span class="inline-block px-3.5 py-0.5 rounded-full bg-sky-500/20 border border-sky-400/40 text-sky-200 text-xs font-bold tracking-wider mb-1">
+            <span class="inline-block px-3.5 py-0.5 rounded-full bg-sky-500/20 border border-sky-400/40 text-sky-200 text-xs font-bold tracking-wider mb-1.5">
               อันดับ 1 – 3 • TOP 1 – 3
             </span>
-            <h2 class="text-xl sm:text-2xl xl:text-3xl font-extrabold gold-gradient-text">
+            <h2 class="text-2xl sm:text-3xl font-extrabold gold-gradient-text">
               🎭 ชุดแฟนซี 4 ภาค • Fancy Costume
             </h2>
           </div>
-          <div id="full-lb-FancyCostume" class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end flex-1"></div>
+          <div id="full-lb-FancyCostume" class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 items-end flex-1"></div>
         </div>
+
       </div>
 
       <div class="text-center mt-8">
@@ -346,13 +377,18 @@
     </div>
   </div>
 
-  <!-- 2. MAIN ROYAL VOTING & ADMIN PORTAL -->
+  <!-- ===================================================================== -->
+  <!-- 2. MAIN ROYAL VOTING & ADMIN PORTAL                                   -->
+  <!-- ===================================================================== -->
   <div id="main-voting-view" class="relative z-10">
+    
+    <!-- Luxury Hero Header with Attached Images & Logos -->
     <header class="hero-bg-wrapper pt-6 pb-8 px-4 mb-6">
       <img src="image_3bd7a6.jpg" alt="Loy Krathong Moonlit River" class="hero-bg-img">
       <div class="hero-overlay"></div>
 
       <div class="relative z-10 max-w-4xl mx-auto text-center">
+        <!-- Official Logos Row -->
         <div class="flex items-center justify-center gap-4 sm:gap-6 mb-3">
           <div class="relative group">
             <div class="absolute -inset-1 bg-amber-400/25 rounded-full blur-md"></div>
@@ -394,6 +430,7 @@
     </header>
 
     <div class="max-w-5xl mx-auto px-3 sm:px-4">
+
       <!-- Hidden Admin Panel (?admin=true) -->
       <section id="admin-panel" class="hidden mb-6 bg-slate-900/95 border-2 border-rose-500/60 rounded-2xl p-4 sm:p-5 shadow-2xl">
         <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-700">
@@ -408,7 +445,7 @@
           </select>
           <input type="number" id="admin-no" placeholder="No. (e.g. 1)" required
             class="px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-600 text-xs sm:text-sm text-white">
-          <input type="text" id="admin-name" placeholder="Contestant Name" required
+          <input type="text" id="admin-name" placeholder="Contestant / Team Name" required
             class="px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-600 text-xs sm:text-sm text-white">
           
           <div class="sm:col-span-3 flex flex-col sm:flex-row items-center gap-3 bg-slate-800/80 p-3 rounded-xl border border-dashed border-amber-400/50">
@@ -426,7 +463,7 @@
         </form>
       </section>
 
-      <!-- Compact Royal Live Leaderboard -->
+      <!-- Compact Royal Live Leaderboard (2 Balanced Columns) -->
       <section class="mb-7 royal-panel rounded-3xl p-4 sm:p-5 relative overflow-hidden">
         <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-amber-400/20">
           <div class="flex items-center gap-2.5">
@@ -444,7 +481,7 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-slate-950/65 rounded-2xl p-3.5 sm:p-4 border border-pink-400/25 shadow-inner">
+          <div class="bg-slate-950/65 rounded-2xl p-4 border border-pink-400/25 shadow-inner">
             <h3 class="text-xs sm:text-sm font-bold text-pink-300 mb-2.5 flex items-center justify-between">
               <span>👸 นางนพมาศ</span>
               <span class="text-[11px] font-semibold text-pink-200/80">Noppamas</span>
@@ -452,7 +489,7 @@
             <div id="lb-Noppamas" class="space-y-2"></div>
           </div>
 
-          <div class="bg-slate-950/65 rounded-2xl p-3.5 sm:p-4 border border-sky-400/25 shadow-inner">
+          <div class="bg-slate-950/65 rounded-2xl p-4 border border-sky-400/25 shadow-inner">
             <h3 class="text-xs sm:text-sm font-bold text-sky-300 mb-2.5 flex items-center justify-between">
               <span>🎭 ชุดแฟนซี 4 ภาค</span>
               <span class="text-[11px] font-semibold text-sky-200/80">Fancy Costume</span>
@@ -462,18 +499,18 @@
         </div>
       </section>
 
-      <!-- Category Selector Tabs -->
+      <!-- Category Selector Tabs (2 Balanced Tabs) -->
       <section class="mb-5">
         <div class="flex items-center justify-between mb-3">
           <h2 class="text-sm sm:text-base font-bold text-amber-300 tracking-wide">
-            🪷 เลือกหมวดหมู่เพื่อโหวต • Select Contestant to Vote
+            🪷 เลือกหมวดหมู่เพื่อโหวต • Select Category to Vote
           </h2>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-3 sm:gap-4">
           <button id="tab-Noppamas" onclick="switchCategory('Noppamas')" class="tab-active py-3.5 px-3 rounded-2xl border text-xs sm:text-sm transition text-center flex flex-col items-center justify-center gap-0.5">
             <span>👸 นางนพมาศ</span>
-            <span class="text-[10px] sm:text-[11px] opacity-85 font-semibold">Noppamas</span>
+            <span class="text-[10px] sm:text-[11px] opacity-90 font-semibold">Noppamas</span>
           </button>
           <button id="tab-Fancy Costume" onclick="switchCategory('Fancy Costume')" class="tab-inactive py-3.5 px-3 rounded-2xl border text-xs sm:text-sm transition text-center flex flex-col items-center justify-center gap-0.5">
             <span>🎭 ชุดแฟนซี 4 ภาค</span>
@@ -513,6 +550,7 @@
           <span>🎆</span> <span>GRAND ROYAL RESULTS</span>
         </a>
       </footer>
+
     </div>
   </div>
 
@@ -682,6 +720,7 @@
     }
 
     function renderLeaderboard(data) {
+      // 1. Compact Leaderboard on Voting Page
       const renderCompact = (list, elementId) => {
         const el = document.getElementById(elementId);
         if (!el) return;
@@ -691,14 +730,14 @@
         }
         const medals = ['👑', '🥈', '🥉'];
         el.innerHTML = list.slice(0, 3).map((item, idx) => `
-          <div class="relative bg-slate-900/90 border ${idx === 0 ? 'border-amber-400/80 shadow-[0_0_12px_rgba(251,191,36,0.2)]' : 'border-slate-800'} rounded-xl p-2.5 flex items-center justify-between">
-            <div class="flex items-center gap-2 truncate pr-2">
-              <span class="text-sm shrink-0">${medals[idx]}</span>
-              <span class="text-xs ${idx === 0 ? 'text-amber-200 font-semibold' : 'text-slate-200'} truncate" title="${item.name}">
+          <div class="relative bg-slate-900/90 border ${idx === 0 ? 'border-amber-400/80 shadow-[0_0_12px_rgba(251,191,36,0.2)]' : 'border-slate-800'} rounded-xl p-2 flex items-center justify-between">
+            <div class="flex items-center gap-1.5 truncate pr-2">
+              <span class="text-xs shrink-0">${medals[idx]}</span>
+              <span class="text-[11px] ${idx === 0 ? 'text-amber-200 font-semibold' : 'text-slate-200'} truncate" title="${item.name}">
                 ${item.name} <span class="text-amber-400/80">(#${item.no})</span>
               </span>
             </div>
-            <span class="font-bold ${idx === 0 ? 'text-amber-300' : 'text-amber-400/90'} text-xs sm:text-sm shrink-0">${Number(item.score || 0).toLocaleString()}</span>
+            <span class="font-bold ${idx === 0 ? 'text-amber-300' : 'text-amber-400/90'} text-xs shrink-0">${Number(item.score || 0).toLocaleString()}</span>
           </div>
         `).join('');
       };
@@ -706,6 +745,7 @@
       renderCompact(data['Noppamas'], 'lb-Noppamas');
       renderCompact(data['Fancy Costume'], 'lb-FancyCostume');
 
+      // 2. Projector Grand Royal Results (Top 1 - 3 Large Portrait & Score)
       const renderProjectorTop3 = (list, categoryKey, elementId) => {
         const el = document.getElementById(elementId);
         if (!el) return;
@@ -719,25 +759,25 @@
           {
             medal: '👑 อันดับ 1 • 1ST PLACE',
             frameClass: 'rank-1-frame',
-            photoHeight: 'h-56 sm:h-64',
+            photoHeight: 'h-60 sm:h-64 xl:h-72',
             orderClass: 'order-1 sm:order-2 scale-[1.03] z-10',
-            scoreSize: 'text-3xl sm:text-4xl',
+            scoreSize: 'text-3xl sm:text-4xl xl:text-5xl',
             badgeBg: 'from-amber-300 via-yellow-400 to-amber-600 text-slate-950'
           },
           {
             medal: '🥈 อันดับ 2 • 2ND PLACE',
             frameClass: '',
-            photoHeight: 'h-48 sm:h-52',
+            photoHeight: 'h-52 sm:h-56 xl:h-60',
             orderClass: 'order-2 sm:order-1',
-            scoreSize: 'text-2xl sm:text-3xl',
+            scoreSize: 'text-2xl sm:text-3xl xl:text-4xl',
             badgeBg: 'from-slate-200 via-slate-300 to-slate-500 text-slate-950'
           },
           {
             medal: '🥉 อันดับ 3 • 3RD PLACE',
             frameClass: '',
-            photoHeight: 'h-44 sm:h-48',
+            photoHeight: 'h-48 sm:h-52 xl:h-56',
             orderClass: 'order-3',
-            scoreSize: 'text-2xl sm:text-3xl',
+            scoreSize: 'text-2xl sm:text-3xl xl:text-4xl',
             badgeBg: 'from-amber-600 via-amber-700 to-amber-900 text-amber-100'
           }
         ];
@@ -752,22 +792,27 @@
 
           return `
             <div class="flex flex-col items-center ${st.orderClass} transition-all duration-500">
+              <!-- Rank Pill -->
               <div class="relative flex items-center justify-center px-3.5 py-1 rounded-full bg-gradient-to-r ${st.badgeBg} font-extrabold text-[11px] sm:text-xs shadow-lg mb-2 text-center">
                 <span>${st.medal}</span>
               </div>
 
-              <div class="relative w-full max-w-[230px] pt-2 pb-4 px-1">
+              <!-- Reference-Style Arch Portrait Frame -->
+              <div class="relative w-full max-w-[235px] pt-2 pb-4 px-1">
+                <!-- Top-Left Number Emblem -->
                 <div class="gala-no-badge absolute top-0 left-0 z-20 min-w-[60px] px-2.5 py-1 rounded-2xl text-center">
                   <div class="text-[9px] font-bold uppercase tracking-wider leading-none opacity-85">เบอร์ • NO.</div>
                   <div class="text-lg sm:text-xl font-black leading-tight">${item.no}</div>
                 </div>
 
+                <!-- Main Portrait -->
                 <div class="gala-portrait-frame ${st.frameClass} ${st.photoHeight} w-full">
                   <img src="${item.image}" alt="${item.name}"
                     onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140047.png'"
                     class="w-full h-full object-cover object-top">
                 </div>
 
+                <!-- Bottom Nameplate -->
                 <div class="gala-nameplate relative z-20 -mt-5 mx-1 px-2.5 py-1.5 rounded-2xl text-center">
                   <div class="font-extrabold text-sm sm:text-base text-slate-950 truncate" title="${item.name}">
                     ${item.name}
@@ -775,6 +820,7 @@
                 </div>
               </div>
 
+              <!-- Large Score Display for Projector -->
               <div class="mt-1 px-4 py-2 rounded-2xl bg-slate-950/85 border ${idx === 0 ? 'border-amber-300 shadow-[0_0_24px_rgba(253,224,71,0.4)]' : 'border-amber-400/35'} text-center min-w-[140px]">
                 <div class="font-black gold-gradient-text leading-none ${st.scoreSize} ${scoreChanged ? 'score-pop' : ''}">
                   ${scoreNum.toLocaleString()}
@@ -819,7 +865,7 @@
         imageUrl: 'https://i.ibb.co/G4qfsmNW/download-00-00-00-00-00-30.gif',
         imageWidth: 110,
         imageHeight: 110,
-        imageAlt: 'Confirm Vote Animation',
+        imageAlt: 'Confirm Vote GIF',
         showCancelButton: true,
         confirmButtonColor: '#f59e0b',
         cancelButtonColor: '#475569',
