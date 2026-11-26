@@ -476,6 +476,27 @@
         <h1 class="font-royal text-3xl sm:text-5xl xl:text-6xl font-black gold-gradient-text tracking-wider drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
           GRAND ROYAL RESULTS
         </h1>
+
+        <!-- สรุปคะแนนรวมทั้งหมด (Total Votes Summary) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto mt-5">
+          <div class="bg-slate-950/75 backdrop-blur-md border border-pink-400/50 rounded-2xl px-4 py-3 shadow-xl">
+            <div class="text-[11px] sm:text-xs text-pink-200 font-semibold">👸 รวมคะแนน นางนพมาศ</div>
+            <div id="total-votes-Noppamas" class="text-2xl sm:text-3xl font-black text-pink-300 mt-0.5">0</div>
+            <div class="text-[10px] text-slate-400">Noppamas Total Votes</div>
+          </div>
+
+          <div class="bg-slate-950/75 backdrop-blur-md border border-amber-300/70 rounded-2xl px-4 py-3 shadow-2xl">
+            <div class="text-[11px] sm:text-xs text-amber-200 font-bold">🏆 คะแนนรวมทั้งหมด (GRAND TOTAL)</div>
+            <div id="total-votes-All" class="text-2xl sm:text-3xl font-black gold-gradient-text mt-0.5">0</div>
+            <div class="text-[10px] text-amber-300/80">All Categories Combined</div>
+          </div>
+
+          <div class="bg-slate-950/75 backdrop-blur-md border border-sky-400/50 rounded-2xl px-4 py-3 shadow-xl">
+            <div class="text-[11px] sm:text-xs text-sky-200 font-semibold">🎭 รวมคะแนน ชุดแฟนซี 4 ภาค</div>
+            <div id="total-votes-FancyCostume" class="text-2xl sm:text-3xl font-black text-sky-300 mt-0.5">0</div>
+            <div class="text-[10px] text-slate-400">Fancy Costume Total Votes</div>
+          </div>
+        </div>
       </header>
 
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-7">
@@ -568,10 +589,10 @@
         <div class="flex flex-col gap-3 mb-4 pb-3 border-b border-slate-700">
           <div>
             <h2 class="text-sm sm:text-base font-bold text-rose-400">🛠️ Admin Management Panel</h2>
-            <span class="text-xs text-slate-400">Upload Photo & Control Voting per Category</span>
+            <span class="text-xs text-slate-400">Upload Photo & Control Real-Time Voting per Category</span>
           </div>
 
-          <!-- ปุ่ม ปิด-เปิดการโหวต แยก 2 หมวด -->
+          <!-- ปุ่ม ปิด-เปิดการโหวต แยก 2 หมวด (ซิงก์แบบเรียลไทม์ผ่าน Apps Script) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div class="flex items-center justify-between gap-2 bg-slate-800/80 border border-pink-400/30 rounded-xl p-3">
               <div>
@@ -750,11 +771,10 @@
     let uploadedBase64 = '';
     let previousScoresMap = {};
 
-    // สถานะเปิด-ปิดการโหวตแยก 2 หมวด (ค่าเริ่มต้น: เปิดการโหวตทั้ง 2 หมวด)
-    const savedVotingState = JSON.parse(localStorage.getItem('lk_category_voting_open_2026') || '{}');
+    // สถานะเปิด-ปิดการโหวตแบบเรียลไทม์แยก 2 หมวด (ดึงจาก Server เป็นหลัก)
     let categoryVotingOpen = {
-      'Noppamas': savedVotingState['Noppamas'] === false ? false : true,
-      'Fancy Costume': savedVotingState['Fancy Costume'] === false ? false : true
+      'Noppamas': true,
+      'Fancy Costume': true
     };
 
     let votedCategories = JSON.parse(localStorage.getItem('lk_voted_categories_2026') || '{}');
@@ -768,6 +788,18 @@
         localStorage.setItem('lk_pageant_device_id', devId);
       }
       return devId;
+    }
+
+    function applyServerVotingStatus(votingStatusObj) {
+      if (!votingStatusObj) return;
+      ['Noppamas', 'Fancy Costume'].forEach(cat => {
+        if (typeof votingStatusObj[cat] === 'boolean') {
+          categoryVotingOpen[cat] = votingStatusObj[cat];
+        } else if (typeof votingStatusObj[cat] === 'string') {
+          categoryVotingOpen[cat] = votingStatusObj[cat].toLowerCase() !== 'closed' && votingStatusObj[cat].toLowerCase() !== 'false';
+        }
+      });
+      updateVotingStatusUI();
     }
 
     function updateVotingStatusUI() {
@@ -823,8 +855,8 @@
       const confirm = await Swal.fire({
         title: nextState ? `เปิดการโหวตหมวด ${catLabel}?` : `ปิดการโหวตหมวด ${catLabel}?`,
         text: nextState
-          ? 'ผู้โหวตจะสามารถกลับมาโหวตในหมวดนี้ได้อีกครั้ง'
-          : 'เมื่อปิดการโหวตแล้ว จะไม่มีใครโหวตในหมวดนี้ได้อีกจนกว่าจะเปิดใหม่',
+          ? 'ทุกเครื่องจะสามารถกลับมาโหวตในหมวดนี้ได้ทันที'
+          : 'เมื่อกดยืนยัน ทุกเครื่องจะไม่สามารถโหวตเพิ่มคะแนนในหมวดนี้ได้อีกทันที',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: nextState ? '#10b981' : '#e11d48',
@@ -835,16 +867,61 @@
         color: '#fff'
       });
 
-      if (confirm.isConfirmed) {
-        categoryVotingOpen[category] = nextState;
-        localStorage.setItem('lk_category_voting_open_2026', JSON.stringify(categoryVotingOpen));
-        updateVotingStatusUI();
+      if (!confirm.isConfirmed) return;
 
+      Swal.fire({
+        title: 'กำลังอัปเดตสถานะเรียลไทม์...',
+        allowOutsideClick: false,
+        background: '#090d16',
+        color: '#fef08a',
+        didOpen: () => Swal.showLoading()
+      });
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'setVotingStatus',
+            pin: adminPin,
+            category: category,
+            isOpen: nextState
+          })
+        });
+        const res = await response.json();
+
+        if (res.success) {
+          if (res.votingStatus) {
+            applyServerVotingStatus(res.votingStatus);
+          } else {
+            categoryVotingOpen[category] = nextState;
+            updateVotingStatusUI();
+          }
+
+          Swal.fire({
+            icon: 'success',
+            title: nextState ? 'เปิดการโหวตเรียบร้อยแล้ว' : 'ปิดการโหวตเรียบร้อยแล้ว',
+            text: `${catLabel}: ${nextState ? 'OPEN' : 'Voting Ended'}`,
+            confirmButtonColor: '#f59e0b',
+            background: '#090d16',
+            color: '#fff'
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'อัปเดตสถานะไม่สำเร็จ',
+            text: res.message || 'กรุณาตรวจสอบสิทธิ์หรือ Apps Script',
+            confirmButtonColor: '#ef4444',
+            background: '#090d16',
+            color: '#fff'
+          });
+        }
+      } catch (err) {
         Swal.fire({
-          icon: 'success',
-          title: nextState ? 'เปิดการโหวตเรียบร้อยแล้ว' : 'ปิดการโหวตเรียบร้อยแล้ว',
-          text: `${catLabel}: ${nextState ? 'OPEN' : 'Voting Ended'}`,
-          confirmButtonColor: '#f59e0b',
+          icon: 'error',
+          title: 'เชื่อมต่อไม่ได้ • Connection Error',
+          text: err.message,
+          confirmButtonColor: '#ef4444',
           background: '#090d16',
           color: '#fff'
         });
@@ -880,16 +957,18 @@
         }
       }
 
-      updateVotingStatusUI();
-      loadData();
-      setInterval(refreshLeaderboard, isLeaderboardOnly ? 3000 : 10000);
+      await loadData();
+      setInterval(refreshLeaderboard, isLeaderboardOnly ? 3000 : 4000);
     };
 
     async function loadData() {
       try {
-        const response = await fetch(`${SCRIPT_URL}?action=getInitialData`);
+        const response = await fetch(`${SCRIPT_URL}?action=getInitialData&_t=${Date.now()}`);
         const data = await response.json();
         allContestants = data.contestants || allContestants;
+        if (data.votingStatus) {
+          applyServerVotingStatus(data.votingStatus);
+        }
         if (!isLeaderboardOnly) renderContestants();
         renderLeaderboard(data.leaderboard || {});
       } catch (err) {
@@ -899,8 +978,11 @@
 
     async function refreshLeaderboard() {
       try {
-        const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard`);
+        const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard&_t=${Date.now()}`);
         const data = await response.json();
+        if (data.votingStatus) {
+          applyServerVotingStatus(data.votingStatus);
+        }
         renderLeaderboard(data.leaderboard || {});
       } catch (err) {
         console.error(err);
@@ -986,7 +1068,26 @@
       document.getElementById('image-modal').classList.add('hidden');
     }
 
+    function updateGrandTotalVotes(data) {
+      const noppamasList = data['Noppamas'] || [];
+      const fancyList = data['Fancy Costume'] || [];
+
+      const totalNoppamas = noppamasList.reduce((sum, item) => sum + Number(item.score || 0), 0);
+      const totalFancy = fancyList.reduce((sum, item) => sum + Number(item.score || 0), 0);
+      const grandTotal = totalNoppamas + totalFancy;
+
+      const elNoppamas = document.getElementById('total-votes-Noppamas');
+      const elFancy = document.getElementById('total-votes-FancyCostume');
+      const elAll = document.getElementById('total-votes-All');
+
+      if (elNoppamas) elNoppamas.textContent = totalNoppamas.toLocaleString();
+      if (elFancy) elFancy.textContent = totalFancy.toLocaleString();
+      if (elAll) elAll.textContent = grandTotal.toLocaleString();
+    }
+
     function renderLeaderboard(data) {
+      updateGrandTotalVotes(data || {});
+
       const renderCompact = (list, elementId) => {
         const el = document.getElementById(elementId);
         if (!el) return;
@@ -1111,7 +1212,9 @@
       renderProjectorTop3(data['Fancy Costume'], 'FancyCostume', 'full-lb-FancyCostume');
     }
 
-    function confirmVote(no, contestantName) {
+    async function confirmVote(no, contestantName) {
+      await refreshLeaderboard();
+
       if (!categoryVotingOpen[currentCategory]) {
         Swal.fire({
           icon: 'warning',
@@ -1175,6 +1278,10 @@
             });
             const res = await response.json();
 
+            if (res.votingStatus) {
+              applyServerVotingStatus(res.votingStatus);
+            }
+
             if (res.success) {
               votedCategories[currentCategory] = true;
               localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
@@ -1183,7 +1290,10 @@
 
               Swal.fire({ icon: 'success', title: 'โหวตสำเร็จ! • Vote Successful!', text: res.message, confirmButtonColor: '#f59e0b', background: '#090d16', color: '#fff' });
             } else {
-              if (res.message.includes('already voted')) {
+              if (res.message && res.message.toLowerCase().includes('closed')) {
+                categoryVotingOpen[currentCategory] = false;
+                updateVotingStatusUI();
+              } else if (res.message && res.message.includes('already voted')) {
                 votedCategories[currentCategory] = true;
                 localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
                 renderContestants();
@@ -1434,4 +1544,3 @@
   </script>
 </body>
 </html>
-```[cite: 11]
