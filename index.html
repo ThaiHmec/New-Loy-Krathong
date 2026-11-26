@@ -388,8 +388,8 @@
       </div>
 
       <div class="text-center mt-8">
-        <a href="?" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-950/80 border border-amber-400/60 hover:border-amber-300 text-amber-200 text-xs sm:text-sm font-semibold backdrop-blur-md transition shadow-xl">
-          <span>←</span> <span>กลับสู่หน้าโหวต • Back to Voting Page</span>
+        <a id="leaderboard-back-link" href="?" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-950/80 border border-amber-400/60 hover:border-amber-300 text-amber-200 text-xs sm:text-sm font-semibold backdrop-blur-md transition shadow-xl">
+          <span>←</span> <span id="leaderboard-back-text">กลับสู่หน้าแอดมิน • Back to Admin Panel</span>
         </a>
       </div>
     </div>
@@ -452,10 +452,13 @@
               <span class="text-xs text-slate-400">Real-Time Firebase + Google Sheet Sync</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="resetLocalTestVote()" class="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-amber-200 font-bold text-xs shadow transition cursor-pointer">
+                🧪 รีเซ็ตสิทธิ์โหวตเครื่องนี้
+              </button>
               <button type="button" id="admin-sync-btn" onclick="syncScoresToSheet()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow transition cursor-pointer">
                 📊 Sync คะแนนลง Google Sheet
               </button>
-              <a href="?view=leaderboard" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow transition">
+              <a href="?view=leaderboard&from=admin" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow transition">
                 <span>🎆</span> <span>GRAND ROYAL RESULTS</span>
               </a>
             </div>
@@ -595,7 +598,7 @@
         </div>
       </section>
 
-      <!-- Royal Footer (Grand Royal Results button moved to Admin Panel) -->
+      <!-- Royal Footer -->
       <footer class="text-center pt-6 border-t border-amber-400/20">
         <div class="flex items-center justify-center gap-3 mb-3 opacity-90">
           <img src="https://i.ibb.co/6R6hw6Tw/un.png" alt="UN" onerror="this.src='https://cdn-icons-png.flaticon.com/512/921/921490.png'" class="w-8 h-8 object-contain rounded-full">
@@ -665,6 +668,23 @@
       }
       return devId;
     }
+
+    // สำหรับเทสระบบจำเครื่องในเครื่องนี้โดยไม่กระทบเครื่องผู้โหวตคนอื่น
+    window.resetLocalTestVote = function() {
+      votedCategories = {};
+      localStorage.removeItem('lk_voted_categories_2026');
+      localStorage.removeItem('lk_pageant_device_id');
+      getOrCreateDeviceId();
+      renderContestants();
+      Swal.fire({
+        icon: 'success',
+        title: 'รีเซ็ตสิทธิ์โหวตเครื่องนี้แล้ว',
+        text: 'เครื่องนี้สามารถโหวตทดสอบซ้ำได้อีกครั้ง (หากต้องการเทสโหวตซ้ำแบบบล็อกจริง ให้ลองเปิดด้วยเบราว์เซอร์อื่น/Incognito)',
+        confirmButtonColor: '#f59e0b',
+        background: '#090d16',
+        color: '#fff'
+      });
+    };
 
     function applyAdminVisibilityMode() {
       const lbSection = document.getElementById('live-leaderboard-section');
@@ -884,6 +904,7 @@
     window.onload = async function() {
       const urlParams = new URLSearchParams(window.location.search);
       const isBoard = urlParams.get('view') === 'leaderboard';
+      const fromAdmin = urlParams.get('from') === 'admin';
 
       startAmbientEffects(isBoard);
 
@@ -891,6 +912,16 @@
         isLeaderboardOnly = true;
         document.getElementById('main-voting-view').classList.add('hidden');
         document.getElementById('leaderboard-only-view').classList.remove('hidden');
+
+        const backLink = document.getElementById('leaderboard-back-link');
+        const backText = document.getElementById('leaderboard-back-text');
+        if (backLink && fromAdmin) {
+          backLink.href = '?admin=true';
+          if (backText) backText.textContent = 'กลับสู่หน้าแอดมิน • Back to Admin Panel';
+        } else if (backLink) {
+          backLink.href = '?';
+          if (backText) backText.textContent = 'กลับสู่หน้าโหวต • Back to Voting Page';
+        }
       }
 
       if (urlParams.get('admin') === 'true' && !isLeaderboardOnly) {
