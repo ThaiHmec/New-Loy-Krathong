@@ -565,21 +565,39 @@
 
       <!-- Hidden Admin Panel (?admin=true) -->
       <section id="admin-panel" class="hidden mb-6 bg-slate-900/95 border-2 border-rose-500/60 rounded-2xl p-4 sm:p-5 shadow-2xl">
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-700">
+        <div class="flex flex-col gap-3 mb-4 pb-3 border-b border-slate-700">
           <div>
             <h2 class="text-sm sm:text-base font-bold text-rose-400">🛠️ Admin Management Panel</h2>
-            <span class="text-xs text-slate-400">Upload Photo & Control Voting Status</span>
+            <span class="text-xs text-slate-400">Upload Photo & Control Voting per Category</span>
           </div>
 
-          <!-- ปุ่ม ปิด-เปิดการโหวต -->
-          <div class="flex items-center gap-2.5">
-            <span id="admin-voting-status-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-500/50">
-              🟢 เปิดการโหวตอยู่ (OPEN)
-            </span>
-            <button type="button" id="toggle-voting-btn" onclick="toggleVotingStatus()"
-              class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm shadow-lg transition cursor-pointer">
-              🔒 ปิดการโหวต
-            </button>
+          <!-- ปุ่ม ปิด-เปิดการโหวต แยก 2 หมวด -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="flex items-center justify-between gap-2 bg-slate-800/80 border border-pink-400/30 rounded-xl p-3">
+              <div>
+                <div class="text-xs sm:text-sm font-bold text-pink-300">👸 นางนพมาศ • Noppamas</div>
+                <span id="status-badge-Noppamas" class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-500/50">
+                  🟢 OPEN
+                </span>
+              </div>
+              <button type="button" id="toggle-btn-Noppamas" onclick="toggleCategoryVoting('Noppamas')"
+                class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition cursor-pointer shrink-0">
+                🔒 ปิดการโหวต
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between gap-2 bg-slate-800/80 border border-sky-400/30 rounded-xl p-3">
+              <div>
+                <div class="text-xs sm:text-sm font-bold text-sky-300">🎭 ชุดแฟนซี 4 ภาค • Fancy Costume</div>
+                <span id="status-badge-Fancy Costume" class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-500/50">
+                  🟢 OPEN
+                </span>
+              </div>
+              <button type="button" id="toggle-btn-Fancy Costume" onclick="toggleCategoryVoting('Fancy Costume')"
+                class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition cursor-pointer shrink-0">
+                🔒 ปิดการโหวต
+              </button>
+            </div>
           </div>
         </div>
         
@@ -608,10 +626,10 @@
         </form>
       </section>
 
-      <!-- Voting Closed Banner -->
+      <!-- Current Category Voting Ended Banner -->
       <div id="voting-closed-banner" class="hidden mb-5 bg-gradient-to-r from-rose-950/90 via-red-950/90 to-rose-950/90 border border-rose-500/60 rounded-2xl p-3.5 text-center shadow-lg">
-        <p class="text-rose-200 font-bold text-xs sm:text-sm">
-          🔒 ปิดการโหวตชั่วคราว • Voting is currently closed by Admin.
+        <p id="voting-closed-text" class="text-rose-200 font-bold text-xs sm:text-sm">
+          🔒 Voting Ended • ปิดการโหวตในหมวดนี้แล้ว
         </p>
       </div>
 
@@ -732,8 +750,12 @@
     let uploadedBase64 = '';
     let previousScoresMap = {};
 
-    // สถานะเปิด-ปิดการโหวต (ค่าเริ่มต้น: เปิดการโหวต)
-    let isVotingOpen = localStorage.getItem('lk_voting_open_2026') === 'false' ? false : true;
+    // สถานะเปิด-ปิดการโหวตแยก 2 หมวด (ค่าเริ่มต้น: เปิดการโหวตทั้ง 2 หมวด)
+    const savedVotingState = JSON.parse(localStorage.getItem('lk_category_voting_open_2026') || '{}');
+    let categoryVotingOpen = {
+      'Noppamas': savedVotingState['Noppamas'] === false ? false : true,
+      'Fancy Costume': savedVotingState['Fancy Costume'] === false ? false : true
+    };
 
     let votedCategories = JSON.parse(localStorage.getItem('lk_voted_categories_2026') || '{}');
 
@@ -749,30 +771,44 @@
     }
 
     function updateVotingStatusUI() {
-      const badge = document.getElementById('admin-voting-status-badge');
-      const btn = document.getElementById('toggle-voting-btn');
-      const closedBanner = document.getElementById('voting-closed-banner');
+      ['Noppamas', 'Fancy Costume'].forEach(cat => {
+        const isOpen = !!categoryVotingOpen[cat];
+        const badge = document.getElementById(`status-badge-${cat}`);
+        const btn = document.getElementById(`toggle-btn-${cat}`);
 
-      if (isVotingOpen) {
         if (badge) {
-          badge.textContent = '🟢 เปิดการโหวตอยู่ (OPEN)';
-          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-500/50';
+          if (isOpen) {
+            badge.textContent = '🟢 OPEN';
+            badge.className = 'inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-500/50';
+          } else {
+            badge.textContent = '🔴 Voting Ended';
+            badge.className = 'inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-950 text-rose-300 border border-rose-500/60';
+          }
         }
+
         if (btn) {
-          btn.textContent = '🔒 ปิดการโหวต';
-          btn.className = 'px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm shadow-lg transition cursor-pointer';
+          if (isOpen) {
+            btn.textContent = '🔒 ปิดการโหวต';
+            btn.className = 'px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition cursor-pointer shrink-0';
+          } else {
+            btn.textContent = '🔓 เปิดการโหวต';
+            btn.className = 'px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow transition cursor-pointer shrink-0';
+          }
         }
-        if (closedBanner) closedBanner.classList.add('hidden');
-      } else {
-        if (badge) {
-          badge.textContent = '🔴 ปิดการโหวตแล้ว (CLOSED)';
-          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-rose-950 text-rose-300 border border-rose-500/60';
+      });
+
+      const currentOpen = !!categoryVotingOpen[currentCategory];
+      const closedBanner = document.getElementById('voting-closed-banner');
+      const closedText = document.getElementById('voting-closed-text');
+      const catLabel = CATEGORY_BILINGUAL_MAP[currentCategory] || currentCategory;
+
+      if (closedBanner) {
+        if (!currentOpen) {
+          if (closedText) closedText.textContent = `🔒 Voting Ended • ปิดการโหวตหมวด ${catLabel} แล้ว`;
+          closedBanner.classList.remove('hidden');
+        } else {
+          closedBanner.classList.add('hidden');
         }
-        if (btn) {
-          btn.textContent = '🔓 เปิดการโหวต';
-          btn.className = 'px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-lg transition cursor-pointer';
-        }
-        if (closedBanner) closedBanner.classList.remove('hidden');
       }
 
       if (!isLeaderboardOnly) {
@@ -780,13 +816,15 @@
       }
     }
 
-    async function toggleVotingStatus() {
-      const nextState = !isVotingOpen;
+    async function toggleCategoryVoting(category) {
+      const nextState = !categoryVotingOpen[category];
+      const catLabel = CATEGORY_BILINGUAL_MAP[category] || category;
+
       const confirm = await Swal.fire({
-        title: nextState ? 'ยืนยันเปิดการโหวต?' : 'ยืนยันปิดการโหวต?',
+        title: nextState ? `เปิดการโหวตหมวด ${catLabel}?` : `ปิดการโหวตหมวด ${catLabel}?`,
         text: nextState
-          ? 'ผู้โหวตจะสามารถกดโหวตผู้เข้าประกวดได้ตามปกติ'
-          : 'เมื่อปิดการโหวตแล้ว ผู้ใช้จะไม่สามารถกดโหวตได้จนกว่าจะเปิดใหม่',
+          ? 'ผู้โหวตจะสามารถกลับมาโหวตในหมวดนี้ได้อีกครั้ง'
+          : 'เมื่อปิดการโหวตแล้ว จะไม่มีใครโหวตในหมวดนี้ได้อีกจนกว่าจะเปิดใหม่',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: nextState ? '#10b981' : '#e11d48',
@@ -798,13 +836,14 @@
       });
 
       if (confirm.isConfirmed) {
-        isVotingOpen = nextState;
-        localStorage.setItem('lk_voting_open_2026', String(isVotingOpen));
+        categoryVotingOpen[category] = nextState;
+        localStorage.setItem('lk_category_voting_open_2026', JSON.stringify(categoryVotingOpen));
         updateVotingStatusUI();
 
         Swal.fire({
           icon: 'success',
-          title: isVotingOpen ? 'เปิดการโหวตเรียบร้อยแล้ว' : 'ปิดการโหวตเรียบร้อยแล้ว',
+          title: nextState ? 'เปิดการโหวตเรียบร้อยแล้ว' : 'ปิดการโหวตเรียบร้อยแล้ว',
+          text: `${catLabel}: ${nextState ? 'OPEN' : 'Voting Ended'}`,
           confirmButtonColor: '#f59e0b',
           background: '#090d16',
           color: '#fff'
@@ -815,14 +854,6 @@
     window.onload = async function() {
       const urlParams = new URLSearchParams(window.location.search);
       const isBoard = urlParams.get('view') === 'leaderboard';
-
-      if (urlParams.get('voting') === 'closed') {
-        isVotingOpen = false;
-        localStorage.setItem('lk_voting_open_2026', 'false');
-      } else if (urlParams.get('voting') === 'open') {
-        isVotingOpen = true;
-        localStorage.setItem('lk_voting_open_2026', 'true');
-      }
 
       startAmbientEffects(isBoard);
 
@@ -884,17 +915,18 @@
           ? 'tab-active py-3.5 px-3 rounded-2xl border text-xs sm:text-sm transition text-center flex flex-col items-center justify-center gap-0.5'
           : 'tab-inactive py-3.5 px-3 rounded-2xl border text-xs sm:text-sm transition text-center flex flex-col items-center justify-center gap-0.5';
       });
-      renderContestants();
+      updateVotingStatusUI();
     }
 
     function renderContestants() {
       const grid = document.getElementById('contestants-grid');
       const list = allContestants[currentCategory] || [];
+      const isCategoryOpen = !!categoryVotingOpen[currentCategory];
       const isAlreadyVoted = !!votedCategories[currentCategory];
-      const isDisabled = !isVotingOpen || isAlreadyVoted;
+      const isDisabled = !isCategoryOpen || isAlreadyVoted;
 
       const banner = document.getElementById('category-voted-banner');
-      if (isVotingOpen && isAlreadyVoted) banner.classList.remove('hidden');
+      if (isCategoryOpen && isAlreadyVoted) banner.classList.remove('hidden');
       else banner.classList.add('hidden');
 
       if (list.length === 0) {
@@ -906,9 +938,9 @@
         let btnClass = 'w-full py-2.5 px-3 rounded-xl btn-royal-gold text-xs sm:text-sm tracking-wide transform active:scale-95 cursor-pointer';
         let btnText = `🪷 โหวตเบอร์ ${c.no} • Vote No. ${c.no}`;
 
-        if (!isVotingOpen) {
-          btnClass = 'w-full py-2.5 px-3 rounded-xl bg-rose-950/70 border border-rose-500/40 text-rose-300 font-semibold text-xs cursor-not-allowed';
-          btnText = '🔒 ปิดโหวต • Voting Closed';
+        if (!isCategoryOpen) {
+          btnClass = 'w-full py-2.5 px-3 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-300 font-bold text-xs cursor-not-allowed';
+          btnText = 'Voting Ended';
         } else if (isAlreadyVoted) {
           btnClass = 'w-full py-2.5 px-3 rounded-xl bg-slate-800/90 border border-slate-700 text-slate-400 font-semibold text-xs cursor-not-allowed';
           btnText = '✓ โหวตแล้ว • Voted';
@@ -1080,11 +1112,11 @@
     }
 
     function confirmVote(no, contestantName) {
-      if (!isVotingOpen) {
+      if (!categoryVotingOpen[currentCategory]) {
         Swal.fire({
           icon: 'warning',
-          title: 'ปิดการโหวตแล้ว • Voting Closed',
-          text: 'ขณะนี้ระบบปิดรับคะแนนโหวตชั่วคราว',
+          title: 'Voting Ended',
+          text: `ปิดการโหวตหมวด ${CATEGORY_BILINGUAL_MAP[currentCategory] || currentCategory} แล้ว`,
           confirmButtonColor: '#e11d48',
           background: '#090d16',
           color: '#fff'
