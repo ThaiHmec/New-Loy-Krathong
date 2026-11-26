@@ -592,7 +592,7 @@
             <span class="text-xs text-slate-400">Upload Photo & Control Real-Time Voting per Category</span>
           </div>
 
-          <!-- ปุ่ม ปิด-เปิดการโหวต แยก 2 หมวด (ซิงก์แบบเรียลไทม์ผ่าน Apps Script) -->
+          <!-- ปุ่ม ปิด-เปิดการโหวต แยก 2 หมวด -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div class="flex items-center justify-between gap-2 bg-slate-800/80 border border-pink-400/30 rounded-xl p-3">
               <div>
@@ -771,13 +771,13 @@
     let uploadedBase64 = '';
     let previousScoresMap = {};
 
-    // สถานะเปิด-ปิดการโหวตแบบเรียลไทม์แยก 2 หมวด (ดึงจาก Server เป็นหลัก)
     let categoryVotingOpen = {
       'Noppamas': true,
       'Fancy Costume': true
     };
 
-    let votedCategories = JSON.parse(localStorage.getItem('lk_voted_categories_2026') || '{}');
+    // ซิงก์สถานะการโหวตกับ QR_Logs ในชีตผ่าน API เป็นหลัก
+    let votedCategories = {};
 
     function getOrCreateDeviceId() {
       let devId = localStorage.getItem('lk_pageant_device_id');
@@ -963,9 +963,17 @@
 
     async function loadData() {
       try {
-        const response = await fetch(`${SCRIPT_URL}?action=getInitialData&_t=${Date.now()}`);
+        const deviceId = encodeURIComponent(getOrCreateDeviceId());
+        const response = await fetch(`${SCRIPT_URL}?action=getInitialData&deviceId=${deviceId}&_t=${Date.now()}`);
         const data = await response.json();
         allContestants = data.contestants || allContestants;
+
+        // รับรายการหมวดที่โหวตแล้วจาก API (QR_Logs) มาทับ votedCategories แทนการเชื่อค่าใน localStorage อย่างเดียว
+        if (data.votedCategories && typeof data.votedCategories === 'object') {
+          votedCategories = data.votedCategories;
+          localStorage.setItem('lk_voted_categories_2026', JSON.stringify(votedCategories));
+        }
+
         if (data.votingStatus) {
           applyServerVotingStatus(data.votingStatus);
         }
@@ -978,8 +986,20 @@
 
     async function refreshLeaderboard() {
       try {
-        const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard&_t=${Date.now()}`);
+        const deviceId = encodeURIComponent(getOrCreateDeviceId());
+        const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard&deviceId=${deviceId}&_t=${Date.now()}`);
         const data = await response.json();
+
+        if (data.votedCategories && typeof data.votedCategories === 'object') {
+          const prevStr = JSON.stringify(votedCategories);
+          const nextStr = JSON.stringify(data.votedCategories);
+          if (prevStr !== nextStr) {
+            votedCategories = data.votedCategories;
+            localStorage.setItem('lk_voted_categories_2026', nextStr);
+            if (!isLeaderboardOnly) renderContestants();
+          }
+        }
+
         if (data.votingStatus) {
           applyServerVotingStatus(data.votingStatus);
         }
